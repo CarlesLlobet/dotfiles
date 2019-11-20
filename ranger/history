@@ -1,0 +1,6 @@
+shell unzip
+shell unzip RapidQuestPack_v1.2.zip
+
+shell unzip Addons\ 1.12.7z
+shell 
+find im

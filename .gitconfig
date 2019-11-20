@@ -1,0 +1,16 @@
+[user]
+	email = ericnova3@gmail.com
+	name = Eric Nova
+	author = Eric Nova
+[push]
+	default = matching
+[diff]
+	tool = vimdiff
+[merge]
+	tool = vimdiff
+[difftool]
+	prompt = false
+[alias]
+        d = difftool
+        lg = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+        co = checkout

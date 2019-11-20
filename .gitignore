@@ -1,0 +1,11 @@
+irssi/startup
+mutt/.addresses.csv
+mutt/emailsDestacados
+mutt/hcache
+emacs.d/.saved-places
+emacs.d/auto-save-list/
+ranger/bookmarks
+vim/linux/.vim/tmp/
+vim/tmp/
+.oh-my-zsh/
+*.swp
