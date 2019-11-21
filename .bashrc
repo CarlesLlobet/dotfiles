@@ -1,4 +1,4 @@
-# Author: Eric Nova
+# Author: Carles Llobet
 
 
 # Colors ------------------------------------------------------------------ {{{
@@ -59,22 +59,14 @@ unset color_prompt force_color_prompt
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias ls='ls --color=auto'
-    alias python='python3.2'
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
-
+    alias dir='dir --color=auto'
+    alias vdir='vdir --color=auto'
     alias grep='grep --color=auto'
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
 fi
 
 # some more ls aliases
-alias vkill='kill $(ps aux|grep firefox|grep opt|grep -Eow [0-9]{5})'
-alias r='ranger'
-alias vlc='vlc --control dbus'
-alias v='vim --remote-silent'
-#alias tmux="TERM=screen-256color-bce tmux"
-#alias tmux="tmux -2 attach"
 
 # Alias definitions.
 # You may want to put all your additions into a separate file like
@@ -88,10 +80,10 @@ fi
 # }}}
 # Exports ----------------------------------------------------------------- {{{
 export EDITOR=/usr/bin/vim 
-export MYVIMRC=/home/rayenok/.vimrc
+export MYVIMRC=~/.vimrc
 # }}}
 
-shopt -s autocd 
+shopt -s autocd
 
 set show-all-if-ambiguous on
 #"\t": menu-complete
