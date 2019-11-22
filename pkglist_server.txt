@@ -1,5 +1,4 @@
 default-jre
-docker
 java-common
 net-tools
 openssh-server

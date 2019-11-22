@@ -122,6 +122,14 @@ elif [[ $system_type == "Linux" ]]; then
     # sudo umount /media/VBoxGuestAdditions
     # sudo rm -rf /media/VBoxGuestAdditions
 
+    # Install Docker
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+    sudo apt-get update 
+    sudo apt install docker-ce
+    sudo usermod -aG docker ${USER}
+    su - ${USER}
+
     # Install emacs26
     cd /tmp/
     wget http://ftp.rediris.es/mirror/GNU/emacs/emacs-26.1.tar.gz
@@ -139,6 +147,18 @@ elif [[ $system_type == "Linux" ]]; then
     ln -s $dir/spacemacs/src/.emacs.d/ ~/.emacs.d
     ln -s $dir/spacemacs/docker/src/.org-capture-templates.el /home/$USER/.org-capture-templates.el
 
+    if [[ $profile == "pentester" || $profile == "developer" || $profile == "full" ]]; then
+        # Install cppchecker
+        cd /opt/
+        sudo git clone https://github.com/danmar/cppcheck.git /opt/cppcheck
+        sudo chown -R $USER:$USER cppcheck
+        cd cppcheck
+        make 
+        sudo make install
+
+        pip install flawfinder
+    fi
+
     if [[ $profile == "pentester" || $profile == "full" ]]; then
         # Install Radare2
         cd /tmp/
@@ -147,6 +167,95 @@ elif [[ $system_type == "Linux" ]]; then
         cd /opt/
         chown -R $USER:$USER radare2
         sudo radare2/sys/install.sh
+
+        # Install Sandmap
+        sudo git clone https://github.com/trimstray/sandmap.git /opt/sandmap/ 
+        sudo chown -R $USER:$USER /opt/sandmap
+        cd /opt/sandmap/
+        ./setup.sh install
+
+        # Install Radamsa
+        cd /opt/
+        sudo wget https://gitlab.com/akihe/radamsa/-/archive/develop/radamsa-develop.tar.gz
+        sudo tar xvf radamsa-develop.tar.gz
+        rm radamsa-develop.tar.gz
+        sudo chown -R $USER:$USER radamsa-develop
+        cd /opt/radamsa-develop
+        make
+        sudo make install
+
+        # Install gef 
+        wget -q -O- https://github.com/hugsy/gef/raw/master/scripts/gef.sh | sh
+        sudo pip3 install ropper
+
+        # Install z3
+        cd /opt/
+        sudo git clone https://github.com/Z3Prover/z3.git
+        sudo chown -R $USER:$USER /opt/z3
+        cd z3
+        ./configure
+        python scripts/mk_make.py --prefix=/home/r13 --python --pypkgdir=/home/r13/.local/lib/python2.7/site-packages/ 
+        cd build;make 
+        sudo make install
+        #sudo pip2 install z3
+        #sudo pip install z3
+
+        # Install ghidra
+        cd /tmp
+        wget https://ghidra-sre.org/ghidra_9.1_PUBLIC_20191023.zip
+        unzip ghidra_9.1_PUBLIC_20191023.zip
+        sudo mv ghidra_9.1 /opt/
+        sudo chown -R $USER:$USER ghidra_9.1
+        sudo apt-get install openjdk-11-jdk
+
+        # # Kali <- ALERT: this steps break ubuntu for some reason
+        # sudo git clone https://github.com/LionSec/katoolin.git /opt/katoolin/
+        # sudo chown -R $USER:$USER /opt/katoolin
+        # cd /opt/katoolin
+        # sudo chmod +x katoolin.py
+        # sudo ./katoolin.py
+        # # Tools installed using katooling:
+        # # | - nmap 
+        # # | - enum4linux 
+        # # | - dotdotpwn
+        # # | - exploitdb 
+        # # | - amap 
+        # # | - sfuzz 
+        # # | - aircrack-ng 
+        # # | - kismet 
+        # # | - dirbuster 
+        # # | - mitmproxy 
+        # # | - sslstrip 
+        # # | - john-the-ripper 
+        # # | - hash-identifier
+        # # | - wordlists 
+
+        # Install afl-triforce container
+        docker pull moflow/afl-triforce
+
+        # Install Qemu
+        sudo apt-get install qemu-kvm qemu virt-manager virt-viewer
+
+        # Install SQLmap
+        cd /opt/
+        sudo git clone --depth 1 https://github.com/sqlmapproject/sqlmap.git sqlmap-dev
+        sudo chown -R $USER:$USER sqlmap-dev 
+        sudo ln -s /opt/sqlmap-dev/sqlmap.py /usr/bin/sqlmap
+
+        # Install binwalk
+        sudo apt-get install binwalk
+
+        # BurpSuite TODO: Install from own version
+
+        # synthesis
+        # john the ripper
+        # sage
+        # hashcat
+        # dotNetInspector
+        # dotpeek <- only works on windows
+        # dex2jar
+        # kali
+    fi
 
     # create symlinks
     for file in $files; do
@@ -179,4 +288,10 @@ elif [[ $system_type == "Linux" ]]; then
     if [ -e ~/.oh-my-zsh ]; then
         ln -s $dir/zsh-theme ~/.oh-my-zsh/themes/
     fi
+
+    # Configure language
+    #echo "es_ES.UTF-8 UTF-8" > /etc/locale.gen \
+    #    && locale-gen es_ES.UTF.8 \
+    #    && dpkg-reconfigure locales \
+    #    && /usr/sbin/update-locale LANG=es_ES.UTF-8
 fi

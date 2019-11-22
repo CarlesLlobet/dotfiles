@@ -1,7 +1,6 @@
 exuberant-ctags
 cscope
 default-jre
-docker
 java-common
 libc6-dev
 pandoc
