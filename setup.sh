@@ -1,9 +1,74 @@
 #!/bin/bash
 
+######### Constants #########
+profile=b
+interactive=1
+
+######### Functions #########
+
+usage()
+{
+    echo -e "Usage: setup.sh [-h | --help] [-y | --yes] [-p | --profile <profile>]"
+    echo -e "Profiles:"
+    echo -e "\t [b | basic] (default)"
+    echo -e "\t [p | pentester]"
+    echo -e "\t [d | developer]"
+    echo -e "\t [s | server]"
+}
+
+######### Main #########
+while [ "$1" != "" ]; do
+    case $1 in
+        -y | --yes )          interactive=0
+                                ;;
+        -p | --profile )        shift
+                                case $1 in
+                                    b | basic)          profile="basic"
+                                                        ;;
+                                    p | pentester)      profile="pentester"
+                                                        ;;
+                                    d | developer)      profile="developer"
+                                                        ;;
+                                    s | server)         profile="server"
+                                                        ;;
+                                    * )                 echo "Error: Selected profile not valid!"
+                                                        echo "Exiting program."
+                                                        exit 1
+                                esac
+                                level=$1
+                                ;;
+        -h | --help )           usage
+                                exit
+                                ;;
+        * )                     echo "Error: $1 is not a valid setup command"
+                                usage
+                                exit 1
+    esac
+    shift
+done
+
+if [ "$interactive" = "1" ]; then
+    read -p "Do you want to configure $profile profile? (y/N)" -n 1 -r
+    echo
+    if [[ ! "$REPLY" =~ ^[y|Y]$ ]]; then
+        echo "Exiting program."
+        exit 1
+    fi
+fi
+echo "Configuring $profile profile"
+exit
 cd "$HOME" || return 
 system_type=$(uname -s)
 if [[ $system_type == "Darwin" ]]; then
     echo "Hello Mac User!"
+    if [ "$interactive" = "1" ]; then
+        read -p "Do you want to install Homebrew? (y/N)" -n 1 -r
+        echo
+        if [[ "$REPLY" != ^[Yy]$ ]]; then
+            echo "Exiting program."
+            exit 1
+        fi
+    fi
     echo "Installing Homebrew..."
     # install homebrew
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
