@@ -1,43 +1,27 @@
-ack
 apt-transport-https
+autotools-dev
+automake
 build-essential
-# byobu
-# bzr
 ca-certificates
-cmake
-ctags
 curl
-direnv
-docker
-duplicity
-exiv2
-git-core
+# direnv
+git
+gnupg2
+gnutls-bin
+guake
 htop
-libc6-dev
-libevent-dev
-libgmp-dev
-libpcre2-dev
-libpng-dev
-libreadline-dev
-libssl-dev
-libxml2-dev
-libyaml-dev
-# libyaml-dev
-# libz-dev
-net-tools
-openssh-server
-python-dev
-python-pip
+libpoppler-glib-dev
+nmap
+nvim
 python-pygments
 python3-dev
 python3-pip
+ranger
 software-properties-common
 tar
 thefuck
 tmux
-unison
 unzip
+vim
 xclip
-xdg-utils
-zlib1g-dev
 zsh

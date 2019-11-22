@@ -89,5 +89,3 @@ set show-all-if-ambiguous on
 #"\t": menu-complete
 
 zsh
-
-zsh

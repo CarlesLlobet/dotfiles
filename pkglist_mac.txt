@@ -1,0 +1,13 @@
+git
+python
+setuptools
+pip
+yarn
+direnv
+#golang
+
+# fix that zsh nonsense
+bash
+bash-completion
+byobu
+neovim
