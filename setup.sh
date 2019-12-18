@@ -3,7 +3,7 @@
 ######### Constants #########
 profile=b
 interactive=1
-
+dotfilesdir=$PWD
 ######### Functions #########
 
 usage()
@@ -76,7 +76,7 @@ if [[ $system_type == "Darwin" ]]; then
     # install homebrew
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     # install pkglist
-    cat pkglist_mac.txt | grep -v "#" | xargs brew install
+    cat $dotfilesdir/packages/pkglist_mac.txt | grep -v "#" | xargs brew install
 
     # cask installs
     brew cask install docker
@@ -96,169 +96,75 @@ elif [[ $system_type == "Linux" ]]; then
             exit 1
         fi
     fi
-    # Variables
-    dir=$PWD
-    files="bashrc bash_aliases .fonts gitconfig gitignore i3 spacemacs tmux.conf vimrc zshrc"
+
+    if [[ $profile == "full" ]]; then
+        installscripts="$(find $dotfilesdir/installscripts -maxdepth 2 -type f | awk -F/ '{print $(NF-1)"/"$NF}')"
+    else
+        installscripts="$(find $dotfilesdir/installscripts/basic -maxdepth 1 -type f | awk -F/ '{print $(NF-1)"/"$NF}')"
+        installscripts=$installscripts$'\n'"$(find $dotfilesdir/installscripts/$profile -maxdepth 1 -type f | awk -F/ '{print $(NF-1)"/"$NF}')"
+    fi
+
+    for script in $installscripts; do
+        if [[ "$(echo $script | awk -F/ '{print $NF}')" == "requirements.txt" ]]; then
+            pip install -r "$dotfilesdir/installscripts/$script"
+        else
+            source "$dotfilesdir/installscripts/$script"
+        fi
+    done
+
+    exit
 
     echo "Hello Linux User!"
 
-    # Install basic environment tools
-    sudo apt update && sudo apt-get install -y $(cat pkglist.txt | grep -v "#" | awk '{print $1}')
+    ### Install APT basic tools ###
+    echo "Installing APT basic tools"
+
+    sudo apt update && sudo apt-get install -y $(cat $dotfilesdir/packages/pkglist.txt | grep -v "#" | awk '{print $1}')
+
+    ### Install APT profile specific tools ###
+    echo "Installing APT $profile specific tools"
     if [[ $profile == "pentester" || $profile == "full" ]]; then
-        sudo apt-get install -y $(cat pkglist_pentester.txt | grep -v "#" | awk '{print $1}')
+        sudo apt-get install -y $(cat $dotfilesdir/packages/pkglist_pentester.txt | grep -v "#" | awk '{print $1}')
     elif [[ $profile == "developer" || $profile == "full" ]]; then
-        sudo apt-get install -y $(cat pkglist_developer.txt | grep -v "#" | awk '{print $1}')
+        sudo apt-get install -y $(cat $dotfilesdir/packages/pkglist_developer.txt | grep -v "#" | awk '{print $1}')
     elif [[ $profile == "server" || $profile == "full" ]]; then
-        sudo apt-get install -y $(cat pkglist_server.txt | grep -v "#" | awk '{print $1}')
+        sudo apt-get install -y $(cat $dotfilesdir/packages/pkglist_server.txt | grep -v "#" | awk '{print $1}')
     fi
 
-    # Install VBox Additions
-    # cd /tmp/
-    # wget -q -c http://download.virtualbox.org/virtualbox/5.2.6/VBoxGuestAdditions_5.2.6.iso
-    # sudo mkdir /media/VBoxGuestAdditions
-    # sudo mount -o loop,ro /tmp/VBoxGuestAdditions_5.2.6.iso /media/VBoxGuestAdditions
-    # sudo sh /media/VBoxGuestAdditions/VBoxLinuxAdditions.run 
-    # rm VBoxGuestAdditions_5.2.6.iso
-    # sudo umount /media/VBoxGuestAdditions
-    # sudo rm -rf /media/VBoxGuestAdditions
+    ### Install Manual tools ###
+    echo "Installing Manual tools from installscripts of $profile profile"
+    if [[ $profile == "full" ]]; then
+        installscripts="$(find $dotfilesdir/installscripts -maxdepth 2 -type f | awk -F/ '{print $(NF-1)"/"$NF}')"
+    else
+        installscripts="$(find $dotfilesdir/installscripts/basic -maxdepth 1 -type f | awk -F/ '{print $(NF-1)"/"$NF}')"
+        installscripts=$installscripts$'\n'"$(find $dotfilesdir/installscripts/$profile -maxdepth 1 -type f | awk -F/ '{print $(NF-1)"/"$NF}')"
+    fi
 
-    # Install Docker
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
-    sudo apt-get update 
-    sudo apt install docker-ce
-    sudo usermod -aG docker ${USER}
-    su - ${USER}
-
-    # Install emacs26
-    cd /tmp/
-    wget http://ftp.rediris.es/mirror/GNU/emacs/emacs-26.1.tar.gz
-    sudo tar xvf emacs-26.1.tar.gz -C /opt
-    cd /opt/emacs-26.1/
-    sudo sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list
-    sudo apt-get update
-    sudo apt-get build-dep -y emacs25
-    sudo ./configure
-    sudo make
-    sudo make install 
-    sudo chown -R $USER:$USER /opt/emacs-25.1
+    for script in $installscripts; do
+        if [[ "$(echo $script | awk -F/ '{print $NF}')" == "requirements.txt" ]]; then
+            pip install -r "$dotfilesdir/installscripts/$script"
+        else
+            source "$dotfilesdir/installscripts/$script"
+        fi
+    done
     
-    ln -s $dir/spacemacs/src/.spacemacs ~/.spacemacs
-    ln -s $dir/spacemacs/src/.emacs.d/ ~/.emacs.d
-    ln -s $dir/spacemacs/docker/src/.org-capture-templates.el /home/$USER/.org-capture-templates.el
+    # BurpSuite TODO: Install from own version
 
-    if [[ $profile == "pentester" || $profile == "developer" || $profile == "full" ]]; then
-        # Install cppchecker
-        cd /opt/
-        sudo git clone https://github.com/danmar/cppcheck.git /opt/cppcheck
-        sudo chown -R $USER:$USER cppcheck
-        cd cppcheck
-        make 
-        sudo make install
+    # synthesis
+    # john the ripper
+    # sage
+    # hashcat
+    # dotNetInspector
+    # dotpeek <- only works on windows
+    # dex2jar
+    # kali
 
-        pip install flawfinder
-    fi
+    ### Configfiles Symlinks ###
+    echo "### Configurating environment with configfiles ###"
 
-    if [[ $profile == "pentester" || $profile == "full" ]]; then
-        # Install Radare2
-        cd /tmp/
-        git clone https://github.com/radareorg/radare2.git
-        mv radare2 /opt/
-        cd /opt/
-        chown -R $USER:$USER radare2
-        sudo radare2/sys/install.sh
-
-        # Install Sandmap
-        sudo git clone https://github.com/trimstray/sandmap.git /opt/sandmap/ 
-        sudo chown -R $USER:$USER /opt/sandmap
-        cd /opt/sandmap/
-        ./setup.sh install
-
-        # Install Radamsa
-        cd /opt/
-        sudo wget https://gitlab.com/akihe/radamsa/-/archive/develop/radamsa-develop.tar.gz
-        sudo tar xvf radamsa-develop.tar.gz
-        rm radamsa-develop.tar.gz
-        sudo chown -R $USER:$USER radamsa-develop
-        cd /opt/radamsa-develop
-        make
-        sudo make install
-
-        # Install gef 
-        wget -q -O- https://github.com/hugsy/gef/raw/master/scripts/gef.sh | sh
-        sudo pip3 install ropper
-
-        # Install z3
-        cd /opt/
-        sudo git clone https://github.com/Z3Prover/z3.git
-        sudo chown -R $USER:$USER /opt/z3
-        cd z3
-        ./configure
-        python scripts/mk_make.py --prefix=/home/r13 --python --pypkgdir=/home/r13/.local/lib/python2.7/site-packages/ 
-        cd build;make 
-        sudo make install
-        #sudo pip2 install z3
-        #sudo pip install z3
-
-        # Install ghidra
-        cd /tmp
-        wget https://ghidra-sre.org/ghidra_9.1_PUBLIC_20191023.zip
-        unzip ghidra_9.1_PUBLIC_20191023.zip
-        sudo mv ghidra_9.1 /opt/
-        sudo chown -R $USER:$USER ghidra_9.1
-        sudo apt-get install openjdk-11-jdk
-
-        # # Kali <- ALERT: this steps break ubuntu for some reason
-        # sudo git clone https://github.com/LionSec/katoolin.git /opt/katoolin/
-        # sudo chown -R $USER:$USER /opt/katoolin
-        # cd /opt/katoolin
-        # sudo chmod +x katoolin.py
-        # sudo ./katoolin.py
-        # # Tools installed using katooling:
-        # # | - nmap 
-        # # | - enum4linux 
-        # # | - dotdotpwn
-        # # | - exploitdb 
-        # # | - amap 
-        # # | - sfuzz 
-        # # | - aircrack-ng 
-        # # | - kismet 
-        # # | - dirbuster 
-        # # | - mitmproxy 
-        # # | - sslstrip 
-        # # | - john-the-ripper 
-        # # | - hash-identifier
-        # # | - wordlists 
-
-        # Install afl-triforce container
-        docker pull moflow/afl-triforce
-
-        # Install Qemu
-        sudo apt-get install qemu-kvm qemu virt-manager virt-viewer
-
-        # Install SQLmap
-        cd /opt/
-        sudo git clone --depth 1 https://github.com/sqlmapproject/sqlmap.git sqlmap-dev
-        sudo chown -R $USER:$USER sqlmap-dev 
-        sudo ln -s /opt/sqlmap-dev/sqlmap.py /usr/bin/sqlmap
-
-        # Install binwalk
-        sudo apt-get install binwalk
-
-        # BurpSuite TODO: Install from own version
-
-        # synthesis
-        # john the ripper
-        # sage
-        # hashcat
-        # dotNetInspector
-        # dotpeek <- only works on windows
-        # dex2jar
-        # kali
-    fi
-
-    # create symlinks
-    for file in $files; do
+    configfiles="$(find $dotfilesdir/configfiles -maxdepth 1 -type f | awk -F/ '{print $NF}')"
+    
+    for file in $configfiles; do
         if [ -h ~/.$file ]; then
             echo "Deleting existing symlink ~/.$file"
             unlink ~/.$file
@@ -267,26 +173,44 @@ elif [[ $system_type == "Linux" ]]; then
             rm -rf ~/.$file 
         fi
         echo "Creating symlink to $file in ~"
-        ln -s $dir/$file ~/.$file
+        ln -s $dotfilesdir/configfiles/$file ~/.$file
     done
 
+    # Spacemacs
+    ln -s $dir/spacemacs/src/.spacemacs ~/.spacemacs
+    ln -s $dir/spacemacs/src/.emacs.d/ ~/.emacs.d
+    ln -s $dir/spacemacs/docker/src/.org-capture-templates.el /home/$USER/.org-capture-templates.el
+
     # Install fonts
+    echo "Installing fonts"
     sudo fc-cache -fv
 
     # Load BashRC
+    echo "Sourcing bashrc"
     if [ -f ~/.bashrc ]; then
         source ~/.bashrc
     fi
+
+    # i3
+    echo "Configuring i3"
+    if [ -e ~/i3 ]; then
+        echo "Deleting i3 directory"
+        rm -rf ~/i3
+    fi
+    ln -s $dotfilesdir/configfiles/i3 ~/
+
     # Ranger
+    echo "Configuring ranger"
     if [ -e ~/.config/ranger ]; then
         echo "Deleting ranger directory"
         rm -rf ~/.config/ranger
     fi
-    ln -s $dir/ranger ~/.config/
+    ln -s $dotfilesdir/configfiles/ranger ~/.config/
 
     # Theme for oh-my-zsh
+    echo "Configuring oh-my-zsh theme"
     if [ -e ~/.oh-my-zsh ]; then
-        ln -s $dir/zsh-theme ~/.oh-my-zsh/themes/
+        ln -s $dotfilesdir/configfiles/zsh-theme ~/.oh-my-zsh/themes/
     fi
 
     # Configure language
@@ -294,4 +218,7 @@ elif [[ $system_type == "Linux" ]]; then
     #    && locale-gen es_ES.UTF.8 \
     #    && dpkg-reconfigure locales \
     #    && /usr/sbin/update-locale LANG=es_ES.UTF-8
+else
+    echo "This dotfiles just support Linux and MacOS distributions. Unrecognized $system_type distribution."
+    exit 1
 fi
