@@ -97,23 +97,6 @@ elif [[ $system_type == "Linux" ]]; then
         fi
     fi
 
-    if [[ $profile == "full" ]]; then
-        installscripts="$(find $dotfilesdir/installscripts -maxdepth 2 -type f | awk -F/ '{print $(NF-1)"/"$NF}')"
-    else
-        installscripts="$(find $dotfilesdir/installscripts/basic -maxdepth 1 -type f | awk -F/ '{print $(NF-1)"/"$NF}')"
-        installscripts=$installscripts$'\n'"$(find $dotfilesdir/installscripts/$profile -maxdepth 1 -type f | awk -F/ '{print $(NF-1)"/"$NF}')"
-    fi
-
-    for script in $installscripts; do
-        if [[ "$(echo $script | awk -F/ '{print $NF}')" == "requirements.txt" ]]; then
-            pip install -r "$dotfilesdir/installscripts/$script"
-        else
-            source "$dotfilesdir/installscripts/$script"
-        fi
-    done
-
-    exit
-
     echo "Hello Linux User!"
 
     ### Install APT basic tools ###
