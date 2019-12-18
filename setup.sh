@@ -11,10 +11,11 @@ usage()
     echo -e "Usage: setup.sh [-h | --help] [-y | --yes] [-p | --profile <profile>]"
     echo -e "Profiles:"
     echo -e "\t [b | basic] (default)"
-    echo -e "\t [p | pentester]"
-    echo -e "\t [d | developer]"
-    echo -e "\t [s | server]"
     echo -e "\t [f | full]"
+    echo -e "\t [d | developer]"
+    echo -e "\t [p | pentester]"
+    echo -e "\t [s | server]"
+    
 }
 
 ######### Main #########

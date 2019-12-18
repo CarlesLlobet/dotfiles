@@ -1,10 +1,8 @@
 apt-transport-https
-autotools-dev
-automake
 build-essential
 ca-certificates
 curl
-# direnv
+direnv
 git
 gnupg2
 gnutls-bin
@@ -12,7 +10,6 @@ guake
 htop
 libpoppler-glib-dev
 libssl-dev
-nmap
 nvim
 python-pygments
 python3-dev

@@ -1,10 +1,10 @@
+direnv
 git
+#golang
+pip
 python
 setuptools
-pip
 yarn
-direnv
-#golang
 
 # fix that zsh nonsense
 bash

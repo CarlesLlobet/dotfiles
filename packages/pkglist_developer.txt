@@ -1,6 +1,8 @@
-exuberant-ctags
+autotools-dev
+automake
 cscope
 default-jre
+exuberant-ctags
 java-common
 libc6-dev
 pandoc
