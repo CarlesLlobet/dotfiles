@@ -1,4 +1,2 @@
-default-jre
-java-common
 net-tools
 openssh-server
