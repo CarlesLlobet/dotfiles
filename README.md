@@ -16,7 +16,7 @@ git clone https://github.com/CarlesLlobet/dotfiles.git
 ### Usage
 
 To apply this configurations you'll just need one of the following systems: 
-- MacOSX
+- MacOSX (Still under construction, not tested)
 - Linux
 
 You can configure the basic profile by executing:
