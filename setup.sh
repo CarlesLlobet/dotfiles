@@ -87,16 +87,7 @@ if [[ $system_type == "Darwin" ]]; then
 
     git config --global core.excludesfile ~/.gitignore
 
-elif [[ $system_type == "Linux" ]]; then 
-    if [ "$interactive" = "1" ]; then
-        read -p "Is it Linux based your distribution? (y/N)" -n 1 -r
-        echo
-        if [[ ! "$REPLY" =~ ^[y|Y]$ ]]; then
-            echo "Exiting program."
-            exit 1
-        fi
-    fi
-
+elif [[ $system_type == "Linux" ]]; then
     echo "Hello Linux User!"
 
     ### Select APT tools to install###
@@ -134,8 +125,6 @@ elif [[ $system_type == "Linux" ]]; then
 
         selectedpackages=($installpackages)
     fi
-
-    exit
 
     if [ "$interactive" = "1" ]; then
         sudo apt update && sudo apt-get install $selectedpackages

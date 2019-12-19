@@ -5,3 +5,4 @@
 #alias tmux="TERM=screen-256color-bce tmux"
 #alias tmux="tmux -2 attach"
 alias python='python3'
+alias dos2unixall='find . -type f -print0 | xargs -0 dos2unix'
