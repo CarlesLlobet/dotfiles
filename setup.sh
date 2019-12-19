@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ######### Constants #########
-profile=b
+profile=basic
 interactive=1
 dotfilesdir=$PWD
 ######### Functions #########
@@ -39,7 +39,6 @@ while [ "$1" != "" ]; do
                                                         echo "Exiting program."
                                                         exit 1
                                 esac
-                                level=$1
                                 ;;
         -h | --help )           usage
                                 exit
@@ -67,7 +66,7 @@ if [[ $system_type == "Darwin" ]]; then
     if [ "$interactive" = "1" ]; then
         read -p "Is it Mac based your distribution? (y/N)" -n 1 -r
         echo
-        if [[ "$REPLY" != ^[Yy]$ ]]; then
+        if [[ ! "$REPLY" =~ ^[y|Y]$ ]]; then
             echo "Exiting program."
             exit 1
         fi
@@ -92,7 +91,7 @@ elif [[ $system_type == "Linux" ]]; then
     if [ "$interactive" = "1" ]; then
         read -p "Is it Linux based your distribution? (y/N)" -n 1 -r
         echo
-        if [[ "$REPLY" != ^[Yy]$ ]]; then
+        if [[ ! "$REPLY" =~ ^[y|Y]$ ]]; then
             echo "Exiting program."
             exit 1
         fi
@@ -100,31 +99,87 @@ elif [[ $system_type == "Linux" ]]; then
 
     echo "Hello Linux User!"
 
-    ### Install APT basic tools ###
+    ### Select APT tools to install###
     echo "Installing APT basic tools"
 
-    sudo apt update && sudo apt-get install -y $(cat $dotfilesdir/packages/pkglist.txt | grep -v "#" | awk '{print $1}')
+    if [ "$interactive" = "1" ]; then
 
-    ### Install APT profile specific tools ###
-    echo "Installing APT $profile specific tools"
-    if [[ $profile == "pentester" || $profile == "full" ]]; then
-        sudo apt-get install -y $(cat $dotfilesdir/packages/pkglist_pentester.txt | grep -v "#" | awk '{print $1}')
-    elif [[ $profile == "developer" || $profile == "full" ]]; then
-        sudo apt-get install -y $(cat $dotfilesdir/packages/pkglist_developer.txt | grep -v "#" | awk '{print $1}')
-    elif [[ $profile == "server" || $profile == "full" ]]; then
-        sudo apt-get install -y $(cat $dotfilesdir/packages/pkglist_server.txt | grep -v "#" | awk '{print $1}')
+        installpackages=$(cat $dotfilesdir/packages/pkglist.txt | grep -v "#" | awk '{for (i=0; i < 2; i++) print $1;print "ON"}')
+        if [[ $profile == "pentester" || $profile == "full" ]]; then
+            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/pkglist_pentester.txt | grep -v "#" | awk '{for (i=0; i < 2; i++) print $1;print "ON"}')"
+        elif [[ $profile == "developer" || $profile == "full" ]]; then
+            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/pkglist_developer.txt | grep -v "#" | awk '{for (i=0; i < 2; i++) print $1;print "ON"}')"
+        elif [[ $profile == "server" || $profile == "full" ]]; then
+            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/pkglist_server.txt | grep -v "#" | awk '{for (i=0; i < 2; i++) print $1;print "ON"}')"
+        fi
+
+        installpackagesarray=($installpackages)
+        
+        selectedpackages=$(whiptail --title "Selected tools by profile" --checklist "Please select/unselect tools to install" 16 78 10 "${installpackagesarray[@]}" 3>&1 1>&2 2>&3)
+
+        exitstatus=$?
+        if [ $exitstatus != 0 ]; then
+            echo "Installation canceled"
+            exit
+        fi
+    else
+        installpackages=$(cat $dotfilesdir/packages/pkglist.txt | grep -v "#" | awk '{print $1}')
+        if [[ $profile == "pentester" || $profile == "full" ]]; then
+            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/pkglist_pentester.txt | grep -v "#" | awk '{print $1}')"
+        elif [[ $profile == "developer" || $profile == "full" ]]; then
+            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/pkglist_developer.txt | grep -v "#" | awk '{print $1}')"
+        elif [[ $profile == "server" || $profile == "full" ]]; then
+            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/pkglist_server.txt | grep -v "#" | awk '{print $1}')"
+        fi
+
+        selectedpackages=($installpackages)
+    fi
+
+    exit
+
+    if [ "$interactive" = "1" ]; then
+        sudo apt update && sudo apt-get install $selectedpackages
+    else
+        sudo apt update && sudo apt-get install -y $selectedpackages
     fi
 
     ### Install Manual tools ###
     echo "Installing Manual tools from installscripts of $profile profile"
-    if [[ $profile == "full" ]]; then
-        installscripts="$(find $dotfilesdir/installscripts -maxdepth 2 -type f | awk -F/ '{print $(NF-1)"/"$NF}')"
+
+    if [ "$interactive" = "1" ]; then
+
+        if [[ $profile == "full" ]]; then
+            installscripts="$(find $dotfilesdir/installscripts -maxdepth 2 -type f | awk -F/ '{print $(NF-1)"/"$NF" "$NF " ON"}')"
+        else
+            installscripts="$(find $dotfilesdir/installscripts/basic -maxdepth 1 -type f | awk -F/ '{print $(NF-1)"/"$NF" "$NF " ON"}')"
+            if [[ $profile != "basic" ]]; then
+                installscripts=$installscripts$'\n'"$(find $dotfilesdir/installscripts/$profile -maxdepth 1 -type f | awk -F/ '{print $(NF-1)"/"$NF" "$NF " ON"}')"
+            fi
+        fi
+
+        installscriptsarray=($installscripts)
+        
+        selectedscripts=$(whiptail --title "Selected tools by profile" --checklist "Please select/unselect tools to install" 16 78 10 "${installscriptsarray[@]}" 3>&1 1>&2 2>&3)
+
+        exitstatus=$?
+        if [ $exitstatus != 0 ]; then
+            echo "Installation canceled"
+            exit
+        fi
     else
-        installscripts="$(find $dotfilesdir/installscripts/basic -maxdepth 1 -type f | awk -F/ '{print $(NF-1)"/"$NF}')"
-        installscripts=$installscripts$'\n'"$(find $dotfilesdir/installscripts/$profile -maxdepth 1 -type f | awk -F/ '{print $(NF-1)"/"$NF}')"
+        if [[ $profile == "full" ]]; then
+            installscripts="$(find $dotfilesdir/installscripts -maxdepth 2 -type f | awk -F/ '{print $(NF-1)"/"$NF}')"
+        else
+            installscripts="$(find $dotfilesdir/installscripts/basic -maxdepth 1 -type f | awk -F/ '{print $(NF-1)"/"$NF}')"
+            if [[ $profile != "basic" ]]; then
+                installscripts=$installscripts$'\n'"$(find $dotfilesdir/installscripts/$profile -maxdepth 1 -type f | awk -F/ '{print $(NF-1)"/"$NF}')"
+            fi
+        fi
+
+        selectedscripts=($installscripts)
     fi
 
-    for script in $installscripts; do
+    for script in $selectedscripts; do
         if [[ "$(echo $script | awk -F/ '{print $NF}')" == "requirements.txt" ]]; then
             pip install -r "$dotfilesdir/installscripts/$script"
         else
@@ -146,9 +201,24 @@ elif [[ $system_type == "Linux" ]]; then
     ### Configfiles Symlinks ###
     echo "### Configurating environment with configfiles ###"
 
-    configfiles="$(find $dotfilesdir/configfiles -maxdepth 1 -type f | awk -F/ '{print $NF}')"
+    if [ "$interactive" = "1" ]; then
+
+        configfiles="$(find $dotfilesdir/configfiles -maxdepth 1 -type f | awk -F/ '{print $NF}')"
+        configfilesarray=($configfiles)
+
+        selectedconfigfiles=$(whiptail --title "Select configuration files to load" --checklist "Select/unselect configfiles to load" 16 78 10 "${configfilesarray[@]}" 3>&1 1>&2 2>&3)
+
+        exitstatus=$?
+        if [ $exitstatus != 0 ]; then
+            echo "Installation canceled"
+            exit
+        fi
+    else
+        configfiles="$(find $dotfilesdir/configfiles -maxdepth 1 -type f | awk -F/ '{print $NF}')"
+        selectedconfigfiles=($configfiles)
+    fi
     
-    for file in $configfiles; do
+    for file in $selectedconfigfiles; do
         if [ -h ~/.$file ]; then
             echo "Deleting existing symlink ~/.$file"
             unlink ~/.$file
@@ -181,7 +251,9 @@ elif [[ $system_type == "Linux" ]]; then
         echo "Deleting i3 directory"
         rm -rf ~/i3
     fi
-    ln -s $dotfilesdir/configfiles/i3 ~/
+    if [ -e $dotfilesdir/configfiles/i3 ];then
+        ln -s $dotfilesdir/configfiles/i3 ~/
+    fi
 
     # Ranger
     echo "Configuring ranger"
@@ -189,7 +261,9 @@ elif [[ $system_type == "Linux" ]]; then
         echo "Deleting ranger directory"
         rm -rf ~/.config/ranger
     fi
-    ln -s $dotfilesdir/configfiles/ranger ~/.config/
+    if [ -e $dotfilesdir/configfiles/ranger ];then
+        ln -s $dotfilesdir/configfiles/ranger ~/.config/
+    fi
 
     # Theme for oh-my-zsh
     echo "Configuring oh-my-zsh theme"

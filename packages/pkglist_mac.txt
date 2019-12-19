@@ -5,7 +5,6 @@ pip
 python
 setuptools
 yarn
-
 # fix that zsh nonsense
 bash
 bash-completion
