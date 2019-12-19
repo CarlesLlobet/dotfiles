@@ -90,8 +90,54 @@ if [[ $system_type == "Darwin" ]]; then
 elif [[ $system_type == "Linux" ]]; then
     echo "Hello Linux User!"
 
+    ### Select APT repositories to add###
+    echo "Adding APT repositories"
+
+    distribution=$(cat /etc/*-release | grep DISTRIB_ID | awk -F= '{print $2}')
+
+    if [ "$distribution" == "Kali" ]; then
+        echo "add-apt-repository does not work properly under Kali Linux, please add required repositories by hand!"
+    else
+        if [ "$interactive" = "1" ]; then
+
+            addedrepositories=$(cat $dotfilesdir/repositories/repos.txt | grep -v "#" | awk '{print $1 " ON"}')
+            if [[ $profile == "pentester" || $profile == "full" ]]; then
+                addedrepositories=$addedrepositories$'\n'"$(cat $dotfilesdir/repositories/repos_pentester.txt | grep -v "#" | awk '{print $1 " ON"}')"
+            elif [[ $profile == "developer" || $profile == "full" ]]; then
+                addedrepositories=$addedrepositories$'\n'"$(cat $dotfilesdir/repositories/repos_developer.txt | grep -v "#" | awk '{print $1 " ON"}')"
+            elif [[ $profile == "server" || $profile == "full" ]]; then
+                addedrepositories=$addedrepositories$'\n'"$(cat $dotfilesdir/repositories/repos_server.txt | grep -v "#" | awk '{print $1 " ON"}')"
+            fi
+
+            addedrepositoriesarray=($addedrepositories)
+            
+            selectedrepositories=$(whiptail --title "Repositories selected for $profile profile" --separate-output --noitem --checklist "" 16 48 10 "${addedrepositoriesarray[@]}" 3>&1 1>&2 2>&3)
+
+            exitstatus=$?
+            if [ $exitstatus != 0 ]; then
+                echo "Installation canceled"
+                exit
+            fi
+        else
+            addedrepositories=$(cat $dotfilesdir/repositories/pkglist.txt | grep -v "#" | awk '{print $1}')
+            if [[ $profile == "pentester" || $profile == "full" ]]; then
+                addedrepositories=$addedrepositories$'\n'"$(cat $dotfilesdir/repositories/repos_pentester.txt | grep -v "#" | awk '{print $1}')"
+            elif [[ $profile == "developer" || $profile == "full" ]]; then
+                addedrepositories=$addedrepositories$'\n'"$(cat $dotfilesdir/repositories/repos_developer.txt | grep -v "#" | awk '{print $1}')"
+            elif [[ $profile == "server" || $profile == "full" ]]; then
+                addedrepositories=$addedrepositories$'\n'"$(cat $dotfilesdir/repositories/repos_server.txt | grep -v "#" | awk '{print $1}')"
+            fi
+
+            selectedrepositories=($addedrepositories)
+        fi
+
+        sudo apt-get install -y software-properties-common
+
+        sudo add-apt-repository $selectedrepositories
+    fi
+
     ### Select APT tools to install###
-    echo "Installing APT basic tools"
+    echo "Installing APT tools"
 
     if [ "$interactive" = "1" ]; then
 

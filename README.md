@@ -44,6 +44,11 @@ To customize this dotfiles with your own tools, you just have to add/remove APT 
 
 ## Out of the Box Software
 
+### Setup Packages
+This specific package is always installed from the setup script in order to add repositories easily (if not in Kali distribution).
+
+* [software-properties-common](https://packages.debian.org/sid/admin/software-properties-common) - Useful to add and remove PPAs (repositories) to apt
+
 ### Basic
 Basic packages needed in any environment.
 
@@ -69,7 +74,6 @@ Basic packages needed in any environment.
 * [python3-pip](https://pypi.org/project/pip/) - Package Installer for Python
 * [ranger](https://github.com/ranger/ranger) - Filemanager from Console, inspired in Vim
 * [scrot](https://packages.debian.org/jessie/scrot) - SCReen shOT utility from command line
-* [software-properties-common](https://packages.debian.org/sid/admin/software-properties-common) - Useful to add and remove PPAs (repositories) to apt
 * [tar](https://linux.die.net/man/1/tar) - GZip / BZip2 / XZ Compression utility
 * [thefuck](https://github.com/nvbn/thefuck) - Command line Typo Autocorrector
 * [tmux](https://github.com/tmux/tmux/wiki) - Terminal Multiplexer
