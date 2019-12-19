@@ -95,7 +95,7 @@ elif [[ $system_type == "Linux" ]]; then
 
     if [ "$interactive" = "1" ]; then
 
-        installpackages=$(cat $dotfilesdir/packages/pkglist.txt | grep -v "#" | awk '{for (i=0; i < 2; i++) print $1;print "ON"}')
+        installpackages=$(cat $dotfilesdir/packages/pkglist.txt | grep -v "#" | awk '{print $1 " ON"}')
         if [[ $profile == "pentester" || $profile == "full" ]]; then
             installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/pkglist_pentester.txt | grep -v "#" | awk '{for (i=0; i < 2; i++) print $1;print "ON"}')"
         elif [[ $profile == "developer" || $profile == "full" ]]; then
@@ -106,7 +106,7 @@ elif [[ $system_type == "Linux" ]]; then
 
         installpackagesarray=($installpackages)
         
-        selectedpackages=$(whiptail --title "Selected tools by profile" --checklist "Please select/unselect tools to install" 16 78 10 "${installpackagesarray[@]}" 3>&1 1>&2 2>&3)
+        selectedpackages=$(whiptail --title "Packages selected for $profile profile" --separate-output --noitem --checklist "" 16 48 10 "${installpackagesarray[@]}" 3>&1 1>&2 2>&3)
 
         exitstatus=$?
         if [ $exitstatus != 0 ]; then
@@ -131,24 +131,23 @@ elif [[ $system_type == "Linux" ]]; then
     else
         sudo apt update && sudo apt-get install -y $selectedpackages
     fi
-
     ### Install Manual tools ###
     echo "Installing Manual tools from installscripts of $profile profile"
 
     if [ "$interactive" = "1" ]; then
 
         if [[ $profile == "full" ]]; then
-            installscripts="$(find $dotfilesdir/installscripts -maxdepth 2 -type f | awk -F/ '{print $(NF-1)"/"$NF" "$NF " ON"}')"
+            installscripts="$(find $dotfilesdir/installscripts -maxdepth 2 -type f | awk -F/ '{print $(NF-1)"/"$NF" ON"}')"
         else
-            installscripts="$(find $dotfilesdir/installscripts/basic -maxdepth 1 -type f | awk -F/ '{print $(NF-1)"/"$NF" "$NF " ON"}')"
+            installscripts="$(find $dotfilesdir/installscripts/basic -maxdepth 1 -type f | awk -F/ '{print $(NF-1)"/"$NF" ON"}')"
             if [[ $profile != "basic" ]]; then
-                installscripts=$installscripts$'\n'"$(find $dotfilesdir/installscripts/$profile -maxdepth 1 -type f | awk -F/ '{print $(NF-1)"/"$NF" "$NF " ON"}')"
+                installscripts=$installscripts$'\n'"$(find $dotfilesdir/installscripts/$profile -maxdepth 1 -type f | awk -F/ '{print $(NF-1)"/"$NF" ON"}')"
             fi
         fi
 
         installscriptsarray=($installscripts)
         
-        selectedscripts=$(whiptail --title "Selected tools by profile" --checklist "Please select/unselect tools to install" 16 78 10 "${installscriptsarray[@]}" 3>&1 1>&2 2>&3)
+        selectedscripts=$(whiptail --title "Install scripts selected for $profile profile" --separate-output --noitem --checklist "" 16 58 10 "${installscriptsarray[@]}" 3>&1 1>&2 2>&3)
 
         exitstatus=$?
         if [ $exitstatus != 0 ]; then
@@ -192,10 +191,10 @@ elif [[ $system_type == "Linux" ]]; then
 
     if [ "$interactive" = "1" ]; then
 
-        configfiles="$(find $dotfilesdir/configfiles -maxdepth 1 -type f | awk -F/ '{print $NF}')"
+        configfiles="$(find $dotfilesdir/configfiles -maxdepth 1 -type f | awk -F/ '{print $NF" ON"}')"
         configfilesarray=($configfiles)
 
-        selectedconfigfiles=$(whiptail --title "Select configuration files to load" --checklist "Select/unselect configfiles to load" 16 78 10 "${configfilesarray[@]}" 3>&1 1>&2 2>&3)
+        selectedconfigfiles=$(whiptail --title "Configuration files to load" --separate-output --noitem --checklist "" 16 38 10 "${configfilesarray[@]}" 3>&1 1>&2 2>&3)
 
         exitstatus=$?
         if [ $exitstatus != 0 ]; then

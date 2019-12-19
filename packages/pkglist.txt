@@ -10,7 +10,6 @@ guake
 htop
 libpoppler-glib-dev
 libssl-dev
-nvim
 python-pygments
 python3-dev
 python3-pip
