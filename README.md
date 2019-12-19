@@ -40,6 +40,7 @@ Usage: setup.sh [-h | --help] [-y | --yes] [-p | --profile <profile>]
 
 ### Customization
 
+To customize this dotfiles with your own tools, you just have to add/remove APT packages in the packagelists of each profile, and/or copy installscripts for manual installation/building of tools into the proper installscripts profile folder.
 
 ## Out of the Box Software
 
