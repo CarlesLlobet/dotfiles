@@ -97,11 +97,11 @@ elif [[ $system_type == "Linux" ]]; then
 
         installpackages=$(cat $dotfilesdir/packages/pkglist.txt | grep -v "#" | awk '{print $1 " ON"}')
         if [[ $profile == "pentester" || $profile == "full" ]]; then
-            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/pkglist_pentester.txt | grep -v "#" | awk '{for (i=0; i < 2; i++) print $1;print "ON"}')"
+            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/pkglist_pentester.txt | grep -v "#" | awk '{print $1 " ON"}')"
         elif [[ $profile == "developer" || $profile == "full" ]]; then
-            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/pkglist_developer.txt | grep -v "#" | awk '{for (i=0; i < 2; i++) print $1;print "ON"}')"
+            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/pkglist_developer.txt | grep -v "#" | awk '{print $1 " ON"}')"
         elif [[ $profile == "server" || $profile == "full" ]]; then
-            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/pkglist_server.txt | grep -v "#" | awk '{for (i=0; i < 2; i++) print $1;print "ON"}')"
+            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/pkglist_server.txt | grep -v "#" | awk '{print $1 " ON"}')"
         fi
 
         installpackagesarray=($installpackages)
