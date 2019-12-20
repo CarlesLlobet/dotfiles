@@ -3,7 +3,7 @@ Environment configuration Run&Go
 
 This project aims to avoid cumbersome configurations when working in a new environment.
 
-![](demo2.gif)
+![](demo4.gif)
 
 ## Getting Started
 
