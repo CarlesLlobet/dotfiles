@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ######### Constants #########
-profile=basic
+profile="basic"
 interactive=1
 dotfilesdir=$PWD
 ######### Functions #########
@@ -21,7 +21,7 @@ usage()
 ######### Main #########
 while [ "$1" != "" ]; do
     case $1 in
-        -y | --yes )          interactive=0
+        -y | --yes )            interactive=0
                                 ;;
         -p | --profile )        shift
                                 case $1 in
@@ -95,22 +95,21 @@ elif [[ $system_type == "Linux" ]]; then
 
     distribution=$(cat /etc/*-release | grep DISTRIB_ID | awk -F= '{print $2}')
 
-    if [ "$distribution" == "Kali" ]; then
-        echo "add-apt-repository does not work properly under Kali Linux, please add required repositories by hand!"
-    else
-        if [ "$interactive" = "1" ]; then
+    
+    if [ "$interactive" = "1" ]; then
+        addedrepositories=$(cat $dotfilesdir/repositories/repos.txt | grep -v "#" | awk '{print $1 " ON"}')
+        if [[ $profile == "pentester" || $profile == "full" ]]; then
+            addedrepositories=$addedrepositories$'\n'"$(cat $dotfilesdir/repositories/repos_pentester.txt | grep -v "#" | awk '{print $1 " ON"}')"
+        elif [[ $profile == "developer" || $profile == "full" ]]; then
+            addedrepositories=$addedrepositories$'\n'"$(cat $dotfilesdir/repositories/repos_developer.txt | grep -v "#" | awk '{print $1 " ON"}')"
+        elif [[ $profile == "server" || $profile == "full" ]]; then
+            addedrepositories=$addedrepositories$'\n'"$(cat $dotfilesdir/repositories/repos_server.txt | grep -v "#" | awk '{print $1 " ON"}')"
+        fi
 
-            addedrepositories=$(cat $dotfilesdir/repositories/repos.txt | grep -v "#" | awk '{print $1 " ON"}')
-            if [[ $profile == "pentester" || $profile == "full" ]]; then
-                addedrepositories=$addedrepositories$'\n'"$(cat $dotfilesdir/repositories/repos_pentester.txt | grep -v "#" | awk '{print $1 " ON"}')"
-            elif [[ $profile == "developer" || $profile == "full" ]]; then
-                addedrepositories=$addedrepositories$'\n'"$(cat $dotfilesdir/repositories/repos_developer.txt | grep -v "#" | awk '{print $1 " ON"}')"
-            elif [[ $profile == "server" || $profile == "full" ]]; then
-                addedrepositories=$addedrepositories$'\n'"$(cat $dotfilesdir/repositories/repos_server.txt | grep -v "#" | awk '{print $1 " ON"}')"
-            fi
+        addedrepositoriesarray=($addedrepositories)
 
-            addedrepositoriesarray=($addedrepositories)
-            
+        if [ ${#addedrepositoriesarray[@]} != 0 ]; then
+        
             selectedrepositories=$(whiptail --title "Repositories selected for $profile profile" --separate-output --noitem --checklist "" 16 48 10 "${addedrepositoriesarray[@]}" 3>&1 1>&2 2>&3)
 
             exitstatus=$?
@@ -118,30 +117,47 @@ elif [[ $system_type == "Linux" ]]; then
                 echo "Installation canceled"
                 exit
             fi
-        else
-            addedrepositories=$(cat $dotfilesdir/repositories/pkglist.txt | grep -v "#" | awk '{print $1}')
-            if [[ $profile == "pentester" || $profile == "full" ]]; then
-                addedrepositories=$addedrepositories$'\n'"$(cat $dotfilesdir/repositories/repos_pentester.txt | grep -v "#" | awk '{print $1}')"
-            elif [[ $profile == "developer" || $profile == "full" ]]; then
-                addedrepositories=$addedrepositories$'\n'"$(cat $dotfilesdir/repositories/repos_developer.txt | grep -v "#" | awk '{print $1}')"
-            elif [[ $profile == "server" || $profile == "full" ]]; then
-                addedrepositories=$addedrepositories$'\n'"$(cat $dotfilesdir/repositories/repos_server.txt | grep -v "#" | awk '{print $1}')"
-            fi
-
-            selectedrepositories=($addedrepositories)
+        fi
+    else
+        addedrepositories=$(cat $dotfilesdir/repositories/pkglist.txt | grep -v "#" | awk '{print $1}')
+        if [[ $profile == "pentester" || $profile == "full" ]]; then
+            addedrepositories=$addedrepositories$'\n'"$(cat $dotfilesdir/repositories/repos_pentester.txt | grep -v "#" | awk '{print $1}')"
+        elif [[ $profile == "developer" || $profile == "full" ]]; then
+            addedrepositories=$addedrepositories$'\n'"$(cat $dotfilesdir/repositories/repos_developer.txt | grep -v "#" | awk '{print $1}')"
+        elif [[ $profile == "server" || $profile == "full" ]]; then
+            addedrepositories=$addedrepositories$'\n'"$(cat $dotfilesdir/repositories/repos_server.txt | grep -v "#" | awk '{print $1}')"
         fi
 
-        sudo apt-get install -y software-properties-common
-
-        sudo add-apt-repository $selectedrepositories
+        selectedrepositories=($addedrepositories)
     fi
+
+    if [ "$selectedrepositories" != "" ]; then
+        if [ "$distribution" == "Kali" ]; then
+            echo "WARNING: Editing sources.list directly in Kali Linux may break system due its fragility!"
+            if [ "$interactive" = "1" ]; then
+                read -p "Do you want to continue? (y/N)" -n 1 -r
+                echo
+                if [[ ! "$REPLY" =~ ^[y|Y]$ ]]; then
+                    echo "Exiting program."
+                    exit 1
+                fi
+            fi
+            for repo in $selectedrepositories; do
+                sudo bash -c "echo '$repo' >> /etc/apt/sources.list"
+            done
+        else
+            sudo apt-get install -y software-properties-common
+            sudo add-apt-repository $selectedrepositories
+        fi
+    fi
+    
 
     ### Select APT tools to install###
     echo "Installing APT tools"
 
     if [ "$interactive" = "1" ]; then
 
-        installpackages=$(cat $dotfilesdir/packages/pkglist.txt | grep -v "#" | awk '{print $1 " ON"}')
+        installpackages=$(cat $dotfilesdir/packages/pkglist.txt | grep -v "#" | awk '{print $1 " ON"}')$'\n'
         if [[ $profile == "pentester" || $profile == "full" ]]; then
             installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/pkglist_pentester.txt | grep -v "#" | awk '{print $1 " ON"}')"
         elif [[ $profile == "developer" || $profile == "full" ]]; then
@@ -151,13 +167,16 @@ elif [[ $system_type == "Linux" ]]; then
         fi
 
         installpackagesarray=($installpackages)
-        
-        selectedpackages=$(whiptail --title "Packages selected for $profile profile" --separate-output --noitem --checklist "" 16 48 10 "${installpackagesarray[@]}" 3>&1 1>&2 2>&3)
 
-        exitstatus=$?
-        if [ $exitstatus != 0 ]; then
-            echo "Installation canceled"
-            exit
+        if [ ${#installpackagesarray[@]} != 0 ]; then
+        
+            selectedpackages=$(whiptail --title "Packages selected for $profile profile" --separate-output --noitem --checklist "" 16 48 10 "${installpackagesarray[@]}" 3>&1 1>&2 2>&3)
+
+            exitstatus=$?
+            if [ $exitstatus != 0 ]; then
+                echo "Installation canceled"
+                exit
+            fi
         fi
     else
         installpackages=$(cat $dotfilesdir/packages/pkglist.txt | grep -v "#" | awk '{print $1}')
@@ -172,11 +191,8 @@ elif [[ $system_type == "Linux" ]]; then
         selectedpackages=($installpackages)
     fi
 
-    if [ "$interactive" = "1" ]; then
-        sudo apt update && sudo apt-get install $selectedpackages
-    else
-        sudo apt update && sudo apt-get install -y $selectedpackages
-    fi
+    sudo apt update && sudo apt-get install -y $selectedpackages
+
     ### Install Manual tools ###
     echo "Installing Manual tools from installscripts of $profile profile"
 
@@ -192,13 +208,16 @@ elif [[ $system_type == "Linux" ]]; then
         fi
 
         installscriptsarray=($installscripts)
-        
-        selectedscripts=$(whiptail --title "Install scripts selected for $profile profile" --separate-output --noitem --checklist "" 16 58 10 "${installscriptsarray[@]}" 3>&1 1>&2 2>&3)
 
-        exitstatus=$?
-        if [ $exitstatus != 0 ]; then
-            echo "Installation canceled"
-            exit
+        if [ ${#installscriptsarray[@]} != 0 ]; then
+        
+            selectedscripts=$(whiptail --title "Install scripts selected for $profile profile" --separate-output --noitem --checklist "" 16 58 10 "${installscriptsarray[@]}" 3>&1 1>&2 2>&3)
+
+            exitstatus=$?
+            if [ $exitstatus != 0 ]; then
+                echo "Installation canceled"
+                exit
+            fi
         fi
     else
         if [[ $profile == "full" ]]; then
@@ -240,12 +259,15 @@ elif [[ $system_type == "Linux" ]]; then
         configfiles="$(find $dotfilesdir/configfiles -maxdepth 1 -type f | awk -F/ '{print $NF" ON"}')"
         configfilesarray=($configfiles)
 
-        selectedconfigfiles=$(whiptail --title "Configuration files to load" --separate-output --noitem --checklist "" 16 38 10 "${configfilesarray[@]}" 3>&1 1>&2 2>&3)
+        if [ ${#configfilesarray[@]} != 0 ]; then
 
-        exitstatus=$?
-        if [ $exitstatus != 0 ]; then
-            echo "Installation canceled"
-            exit
+            selectedconfigfiles=$(whiptail --title "Configuration files to load" --separate-output --noitem --checklist "" 16 38 10 "${configfilesarray[@]}" 3>&1 1>&2 2>&3)
+
+            exitstatus=$?
+            if [ $exitstatus != 0 ]; then
+                echo "Installation canceled"
+                exit
+            fi
         fi
     else
         configfiles="$(find $dotfilesdir/configfiles -maxdepth 1 -type f | awk -F/ '{print $NF}')"
@@ -253,15 +275,15 @@ elif [[ $system_type == "Linux" ]]; then
     fi
     
     for file in $selectedconfigfiles; do
-        if [ -h ~/.$file ]; then
+        if [ -h ~/$file ]; then
             echo "Deleting existing symlink ~/.$file"
-            unlink ~/.$file
-        elif [ -f ~/.$file ]; then
+            unlink ~/$file
+        elif [ -f ~/$file ]; then
             echo "Deleting existing file ~/.$file"
-            rm -rf ~/.$file 
+            rm -rf ~/$file 
         fi
         echo "Creating symlink to $file in ~"
-        ln -s $dotfilesdir/configfiles/$file ~/.$file
+        ln -s $dotfilesdir/configfiles/$file ~/$file
     done
 
     # Spacemacs
@@ -275,18 +297,8 @@ elif [[ $system_type == "Linux" ]]; then
 
     # Load BashRC
     echo "Sourcing bashrc"
-    if [ -f ~/.bashrc ]; then
+    if [ -h ~/.bashrc ]; then
         source ~/.bashrc
-    fi
-
-    # i3
-    echo "Configuring i3"
-    if [ -e ~/i3 ]; then
-        echo "Deleting i3 directory"
-        rm -rf ~/i3
-    fi
-    if [ -e $dotfilesdir/configfiles/i3 ];then
-        ln -s $dotfilesdir/configfiles/i3 ~/
     fi
 
     # Ranger
@@ -299,10 +311,10 @@ elif [[ $system_type == "Linux" ]]; then
         ln -s $dotfilesdir/configfiles/ranger ~/.config/
     fi
 
-    # Theme for oh-my-zsh
-    echo "Configuring oh-my-zsh theme"
-    if [ -e ~/.oh-my-zsh ]; then
-        ln -s $dotfilesdir/configfiles/zsh-theme ~/.oh-my-zsh/themes/
+    # If WSL set symlink to Windows Home
+    if grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null ; then
+        echo "WSL Detected!"
+        ln -s /mnt/c/Users/${USER} ~/Windows
     fi
 
     # Configure language

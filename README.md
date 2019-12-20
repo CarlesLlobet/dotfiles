@@ -62,6 +62,7 @@ Basic packages needed in any environment.
 * [curl](https://curl.haxx.se/) - To make requests from command line
 * [default-jre](https://packages.debian.org/stretch/default-jre) - Java Runtime Environment for Java based applications
 * [direnv](https://direnv.net/) - Loads different ENV variables depending on the PWD automatically
+* [Emacs](https://www.gnu.org/software/emacs/) - GUI Text Editor
 * [git](https://git-scm.com/) - The only VCS that really matters
 * [gnupg2](https://gnupg.org/) - OpenPGP implementation to cypher and decypher
 * [gnutls-bin](https://www.gnutls.org/) - TLS SSL and DTLS to do secure communications
@@ -70,7 +71,7 @@ Basic packages needed in any environment.
 * [java-common](https://packages.debian.org/es/jessie/java-common) - Java Commons info
 * [libpoppler-glib-dev](https://packages.debian.org/jessie/libpoppler-glib-dev) - To render PDF from console
 * [libssl-dev](https://packages.debian.org/es/jessie/libssl-dev) - Dependency for OpenSSL
-* [nvim](https://neovim.io/) - Vim based editor with extended features
+* [pandoc](https://pandoc.org/) - Converting Markup files to other formats (docx, ppt, etc.)
 * [python-pygments](https://pygments.org/) - Python syntax highlighter
 * [python3-dev](https://packages.debian.org/buster/python3-dev) - Development libs for Python3
 * [python3-pip](https://pypi.org/project/pip/) - Package Installer for Python
@@ -88,7 +89,6 @@ Basic packages needed in any environment.
 ###### Scripted installation software
 
 * [Docker](https://www.docker.com/) - Application virtualization software
-* [Emacs](https://www.gnu.org/software/emacs/) - GUI Text Editor
 * [VirtualBox GuestAdditions](https://docs.oracle.com/cd/E36500_01/E36502/html/qs-guest-additions.html) - Device Drivers and System applications to improve interaction between Host-VM
 
 ###### Pip packages
@@ -105,7 +105,6 @@ Specific packages for developers.
 * [cscope](http://cscope.sourceforge.net/) - Browse C Source Code (even C++ and Java)
 * [exuberant-ctags](http://ctags.sourceforge.net/) - Multilanguage implementation of Ctags to identify functions
 * [libc6-dev](https://packages.debian.org/jessie/libc6-dev) - GNU C development library
-* [pandoc](https://pandoc.org/) - Converting Markup files to other formats (docx, ppt, etc.)
 
 ###### Scripted installation software
 
@@ -124,7 +123,6 @@ Specific packages for cybersecurity engineers.
 * [cscope](http://cscope.sourceforge.net/) - Browse C Source Code (even C++ and Java)
 * [exuberant-ctags](http://ctags.sourceforge.net/) - Multilanguage implementation of Ctags to identify functions
 * [nmap](https://nmap.org/) - Network Discovery Scanner
-* [pandoc](https://pandoc.org/) - Converting Markup files to other formats (docx, ppt, etc.)
 * [qemu-kvm]() - To use CPU extensions (HVM) instead of native Qemu using emulation
 * [qemu](https://www.qemu.org/) - Virtual Machine Manager
 * [virt-manager](https://virt-manager.org/) - Desktop GUI to manage VMs

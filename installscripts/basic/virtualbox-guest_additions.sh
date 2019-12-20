@@ -7,3 +7,5 @@
 # rm VBoxGuestAdditions_5.2.6.iso
 # sudo umount /media/VBoxGuestAdditions
 # sudo rm -rf /media/VBoxGuestAdditions
+
+return 0

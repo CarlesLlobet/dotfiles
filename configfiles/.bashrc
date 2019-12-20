@@ -1,7 +1,6 @@
 # Author: Carles Llobet
 
-
-# Colors ------------------------------------------------------------------ {{{
+# Colors definition
 BLACK="\[\033[0;30m\]"
 DARK_GRAY="\[\033[1;30m\]"
 LIGHT_GRAY="\[\033[0;37m\]"
@@ -21,8 +20,7 @@ WHITE="\[\033[1;37m\]"
 DEFAULT_COLOR="\[\033[00m\]"
 BLACK_BACKGROUND="\[\e[41;1m\]"
 
-# }}}
-# History control --------------------------------------------------------- {{{
+# History control
 # don't put duplicate lines in the history. See bash(1) for more options
 # don't overwrite GNU Midnight Commander's setting of `ignorespace'.
 HISTCONTROL="ignoredups:erasedups"
@@ -34,11 +32,13 @@ export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; histor
 export HISTFILESIZE=500000
 export HISTSIZE=100000
 
+# Shell Options
 # multi-line commands as one command
 shopt -s cmdhist
+shopt -s autocd
+set show-all-if-ambiguous on
 
-# }}}
-# Prompt ------------------------------------------------------------------ {{{
+# Prompt
 # set variable identifying the chroot you work in (used in the prompt below)
 if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
@@ -53,9 +53,8 @@ fi
 
 unset color_prompt force_color_prompt
 
-# }}}
-# Aliases ----------------------------------------------------------------- {{{
-# enable color support of ls and also add handy aliases
+# Colors aliases
+# enable color support of ls and also add handy color aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias ls='ls --color=auto'
@@ -77,15 +76,17 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
-# }}}
-# Exports ----------------------------------------------------------------- {{{
-export EDITOR=/usr/bin/vim 
+# Functions
+mcd () { mkdir -p "$1" && cd "$1"; }        # mcd: Makes new Dir and jumps inside
+
+# Exports 
+VISUAL=editor; export VISUAL EDITOR=editor; export EDITOR
 export MYVIMRC=~/.vimrc
-# }}}
 
-shopt -s autocd
-
-set show-all-if-ambiguous on
-#"\t": menu-complete
-
-zsh
+if grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null ; then
+    # This is for a docker-tools installation in windows to use with VBox Hipervisor
+    # if you use docker with Windows Hiper-V and don't have VBox, use 127.0.0.1:2376
+    export DOCKER_HOST=tcp://192.168.99.100:2376  # your Docker IP
+    export DOCKER_CERT_PATH=/mnt/c/Users/${USER}/.docker/machine/certs
+    export DOCKER_TLS_VERIFY=1
+fi
