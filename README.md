@@ -3,6 +3,8 @@ Environment configuration Run&Go
 
 This project aims to avoid cumbersome configurations when working in a new environment.
 
+![](demo.gif)
+
 ## Getting Started
 
 These instructions will get you a copy of the environment configuration up and running on your local machine. 
