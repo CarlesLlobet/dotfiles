@@ -323,6 +323,16 @@ elif [[ $system_type == "Linux" ]]; then
         ln -s $dotfilesdir/configfiles/ranger ~/.config/
     fi
 
+    # Vim
+    echo "Configuring vim"
+    if [ -e ~/.vim ]; then
+        echo "Deleting ranger directory"
+        rm -rf ~/.vim
+    fi
+    if [ -e $dotfilesdir/configfiles/.vim ];then
+        ln -s $dotfilesdir/configfiles/.vim ~/.vim/
+    fi
+
     # If WSL set symlink to Windows Home
     if grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null ; then
         echo "WSL Detected!"
