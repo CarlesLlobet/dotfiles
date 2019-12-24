@@ -199,7 +199,6 @@ elif [[ $system_type == "Linux" ]]; then
         fi
 
         selectedpackages=$installpackages
-
     fi
 
     sudo apt update && sudo apt-get install -y $selectedpackages
@@ -240,10 +239,11 @@ elif [[ $system_type == "Linux" ]]; then
             fi
         fi
 
-        selectedscripts=($installscripts)
+        selectedscripts=$installscripts
     fi
 
     for script in $selectedscripts; do
+        echo "Installing script $script"
         if [[ "$(echo $script | awk -F/ '{print $NF}')" == "requirements.txt" ]]; then
             pip install -r "$dotfilesdir/installscripts/$script"
         else
@@ -370,9 +370,6 @@ elif [[ $system_type == "Linux" ]]; then
         fi
         ln -s /mnt/c/Users/${USER} ~/Windows
     fi
-
-    # dos2unix everything
-    dos2unixall $dotfilesdir/configfiles
 
     # Configure language
     #echo "es_ES.UTF-8 UTF-8" > /etc/locale.gen \
