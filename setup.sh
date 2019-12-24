@@ -97,20 +97,22 @@ elif [[ $system_type == "Linux" ]]; then
 
     
     if [ "$interactive" = "1" ]; then
-        addedrepositories=$(cat $dotfilesdir/repositories/repos.txt | grep -v "#" | awk '{print $1 " ON"}')
+        addedrepositories=$(cat $dotfilesdir/repositories/repos.txt | grep -v "#" | awk -F'\n' '{print $1 "|ON"}')
         if [[ $profile == "pentester" || $profile == "full" ]]; then
-            addedrepositories=$addedrepositories$'\n'"$(cat $dotfilesdir/repositories/repos_pentester.txt | grep -v "#" | awk '{print $1 " ON"}')"
+            addedrepositories=$addedrepositories$'|'"$(cat $dotfilesdir/repositories/repos_pentester.txt | grep -v "#" | awk -F'\n' '{print $1 "|ON"}')"
         elif [[ $profile == "developer" || $profile == "full" ]]; then
-            addedrepositories=$addedrepositories$'\n'"$(cat $dotfilesdir/repositories/repos_developer.txt | grep -v "#" | awk '{print $1 " ON"}')"
+            addedrepositories=$addedrepositories$'|'"$(cat $dotfilesdir/repositories/repos_developer.txt | grep -v "#" | awk -F'\n' '{print $1 "|ON"}')"
         elif [[ $profile == "server" || $profile == "full" ]]; then
-            addedrepositories=$addedrepositories$'\n'"$(cat $dotfilesdir/repositories/repos_server.txt | grep -v "#" | awk '{print $1 " ON"}')"
+            addedrepositories=$addedrepositories$'|'"$(cat $dotfilesdir/repositories/repos_server.txt | grep -v "#" | awk -F'\n' '{print $1 "|ON"}')"
         fi
 
+        IFS=$'|'
         addedrepositoriesarray=($addedrepositories)
+        IFS=$' \t\n'
 
         if [ ${#addedrepositoriesarray[@]} != 0 ]; then
         
-            selectedrepositories=$(whiptail --title "Repositories selected for $profile profile" --separate-output --noitem --checklist "" 16 48 10 "${addedrepositoriesarray[@]}" 3>&1 1>&2 2>&3)
+            selectedrepositories=$(whiptail --title "Repositories selected for $profile profile" --separate-output --noitem --checklist "" 16 98 10 "${addedrepositoriesarray[@]}" 3>&1 1>&2 2>&3)
 
             exitstatus=$?
             if [ $exitstatus != 0 ]; then
@@ -121,14 +123,15 @@ elif [[ $system_type == "Linux" ]]; then
     else
         addedrepositories=$(cat $dotfilesdir/repositories/pkglist.txt | grep -v "#" | awk '{print $1}')
         if [[ $profile == "pentester" || $profile == "full" ]]; then
-            addedrepositories=$addedrepositories$'\n'"$(cat $dotfilesdir/repositories/repos_pentester.txt | grep -v "#" | awk '{print $1}')"
+            addedrepositories=$addedrepositories$'|'"$(cat $dotfilesdir/repositories/repos_pentester.txt | grep -v "#" | awk '{print $1}')"
         elif [[ $profile == "developer" || $profile == "full" ]]; then
-            addedrepositories=$addedrepositories$'\n'"$(cat $dotfilesdir/repositories/repos_developer.txt | grep -v "#" | awk '{print $1}')"
+            addedrepositories=$addedrepositories$'|'"$(cat $dotfilesdir/repositories/repos_developer.txt | grep -v "#" | awk '{print $1}')"
         elif [[ $profile == "server" || $profile == "full" ]]; then
-            addedrepositories=$addedrepositories$'\n'"$(cat $dotfilesdir/repositories/repos_server.txt | grep -v "#" | awk '{print $1}')"
+            addedrepositories=$addedrepositories$'|'"$(cat $dotfilesdir/repositories/repos_server.txt | grep -v "#" | awk '{print $1}')"
         fi
-
+        IFS=$'|'
         selectedrepositories=($addedrepositories)
+        IFS=$' \t\n'
     fi
 
     if [ "$selectedrepositories" != "" ]; then
@@ -142,15 +145,22 @@ elif [[ $system_type == "Linux" ]]; then
                     exit 1
                 fi
             fi
+            echo "$selectedrepositories"
+            IFS=$'\n'
             for repo in $selectedrepositories; do
-                sudo bash -c "echo '$repo' >> /etc/apt/sources.list"
+                url=$(echo "$repo" | tr ' ' '\n' | grep https)
+                if grep -q "$url" "/etc/apt/sources.list"; then
+                    echo "$repo already found in /etc/apt/sources.list"
+                else
+                    sudo bash -c "echo '$repo' >> /etc/apt/sources.list"
+                fi
+                IFS=$' \t\n'
             done
         else
             sudo apt-get install -y software-properties-common
             sudo add-apt-repository $selectedrepositories
         fi
     fi
-    
 
     ### Select APT tools to install###
     echo "Installing APT tools"
@@ -189,10 +199,11 @@ elif [[ $system_type == "Linux" ]]; then
         fi
 
         selectedpackages=($installpackages)
+
     fi
 
     sudo apt update && sudo apt-get install -y $selectedpackages
-
+    
     ### Install Manual tools ###
     echo "Installing Manual tools from installscripts of $profile profile"
 
@@ -257,6 +268,7 @@ elif [[ $system_type == "Linux" ]]; then
     if [ "$interactive" = "1" ]; then
 
         configfiles="$(find $dotfilesdir/configfiles -maxdepth 1 -type f | awk -F/ '{print $NF" ON"}')"
+
         configfilesarray=($configfiles)
 
         if [ ${#configfilesarray[@]} != 0 ]; then
@@ -273,7 +285,7 @@ elif [[ $system_type == "Linux" ]]; then
         configfiles="$(find $dotfilesdir/configfiles -maxdepth 1 -type f | awk -F/ '{print $NF}')"
         selectedconfigfiles=($configfiles)
     fi
-    
+
     for file in $selectedconfigfiles; do
         if [ -h ~/$file ]; then
             echo "Deleting existing symlink ~/.$file"
