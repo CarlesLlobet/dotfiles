@@ -121,13 +121,13 @@ elif [[ $system_type == "Linux" ]]; then
             fi
         fi
     else
-        addedrepositories=$(cat $dotfilesdir/repositories/pkglist.txt | grep -v "#" | awk '{print $1}')
+        addedrepositories=$(cat $dotfilesdir/repositories/repos.txt | grep -v "#" | awk -F'\n' '{print $1}')
         if [[ $profile == "pentester" || $profile == "full" ]]; then
-            addedrepositories=$addedrepositories$'|'"$(cat $dotfilesdir/repositories/repos_pentester.txt | grep -v "#" | awk '{print $1}')"
+            addedrepositories=$addedrepositories$'|'"$(cat $dotfilesdir/repositories/repos_pentester.txt | grep -v "#" | awk -F'\n' '{print $1}')"
         elif [[ $profile == "developer" || $profile == "full" ]]; then
-            addedrepositories=$addedrepositories$'|'"$(cat $dotfilesdir/repositories/repos_developer.txt | grep -v "#" | awk '{print $1}')"
+            addedrepositories=$addedrepositories$'|'"$(cat $dotfilesdir/repositories/repos_developer.txt | grep -v "#" | awk -F'\n' '{print $1}')"
         elif [[ $profile == "server" || $profile == "full" ]]; then
-            addedrepositories=$addedrepositories$'|'"$(cat $dotfilesdir/repositories/repos_server.txt | grep -v "#" | awk '{print $1}')"
+            addedrepositories=$addedrepositories$'|'"$(cat $dotfilesdir/repositories/repos_server.txt | grep -v "#" | awk -F'\n' '{print $1}')"
         fi
         IFS=$'|'
         selectedrepositories=($addedrepositories)
@@ -167,7 +167,7 @@ elif [[ $system_type == "Linux" ]]; then
 
     if [ "$interactive" = "1" ]; then
 
-        installpackages=$(cat $dotfilesdir/packages/pkglist.txt | grep -v "#" | awk '{print $1 " ON"}')$'\n'
+        installpackages=$(cat $dotfilesdir/packages/pkglist.txt | grep -v "#" | awk '{print $1 " ON"}')
         if [[ $profile == "pentester" || $profile == "full" ]]; then
             installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/pkglist_pentester.txt | grep -v "#" | awk '{print $1 " ON"}')"
         elif [[ $profile == "developer" || $profile == "full" ]]; then
@@ -198,7 +198,7 @@ elif [[ $system_type == "Linux" ]]; then
             installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/pkglist_server.txt | grep -v "#" | awk '{print $1}')"
         fi
 
-        selectedpackages=($installpackages)
+        selectedpackages=$installpackages
 
     fi
 
@@ -283,26 +283,49 @@ elif [[ $system_type == "Linux" ]]; then
         fi
     else
         configfiles="$(find $dotfilesdir/configfiles -maxdepth 1 -type f | awk -F/ '{print $NF}')"
-        selectedconfigfiles=($configfiles)
+        selectedconfigfiles=$configfiles
     fi
 
     for file in $selectedconfigfiles; do
-        if [ -h ~/$file ]; then
+        if [ -h ~/"$file" ]; then
             echo "Deleting existing symlink ~/.$file"
-            unlink ~/$file
-        elif [ -f ~/$file ]; then
+            unlink ~/"$file"
+        elif [ -f ~/"$file" ]; then
             echo "Deleting existing file ~/.$file"
-            rm -rf ~/$file 
+            rm -rf ~/"$file" 
         fi
         echo "Creating symlink to $file in ~"
         ln -s $dotfilesdir/configfiles/$file ~/$file
     done
 
     # Spacemacs
-    ln -s $dir/spacemacs/src/.spacemacs ~/.spacemacs
-    ln -s $dir/spacemacs/src/.emacs.d/ ~/.emacs.d
-    ln -s $dir/spacemacs/docker/src/.org-capture-templates.el /home/$USER/.org-capture-templates.el
+    if [ -d $dotfilesdir/configfiles/spacemacs ]; then
+        if [ -h ~/.spacemacs ]; then
+                echo "Deleting existing symlink ~/.spacemacs"
+                unlink ~/.spacemacs
+        elif [ -f ~/.spacemacs ]; then
+            echo "Deleting existing file ~/.spacemacs"
+            rm -rf ~/.spacemacs
+        fi
 
+        ln -s $dotfilesdir/configfiles/spacemacs/src/.spacemacs ~/.spacemacs
+        if [ -h ~/.emacs.d ]; then
+                echo "Deleting existing symlink ~/.emacs.d"
+                unlink ~/.emacs.d
+        elif [ -f ~/.emacs.d ]; then
+            echo "Deleting existing file ~/.emacs.d"
+            rm -rf ~/.emacs.d
+        fi
+        ln -s $dotfilesdir/configfiles/spacemacs/src/.emacs.d/ ~/.emacs.d
+        if [ -h ~/.org-capture-templates.el ]; then
+                echo "Deleting existing symlink ~/.org-capture-templates.el"
+                unlink ~/.org-capture-templates.el
+        elif [ -f ~/.org-capture-templates.el ]; then
+            echo "Deleting existing file ~/.org-capture-templates.el"
+            rm -rf ~/.org-capture-templates.el
+        fi
+        ln -s $dotfilesdir/configfiles/spacemacs/docker/src/.org-capture-templates.el ~/.org-capture-templates.el
+    fi
     # Install fonts
     echo "Installing fonts"
     sudo fc-cache -fv
@@ -315,29 +338,41 @@ elif [[ $system_type == "Linux" ]]; then
 
     # Ranger
     echo "Configuring ranger"
-    if [ -e ~/.config/ranger ]; then
+    if [ -h ~/.config/ranger ]; then
+        echo "Deleting existing symlink ~/.config/ranger"
+        unlink ~/.config/ranger
+    elif [ -d ~/.config/ranger ]; then
         echo "Deleting ranger directory"
         rm -rf ~/.config/ranger
     fi
-    if [ -e $dotfilesdir/configfiles/ranger ];then
+    if [ -d $dotfilesdir/configfiles/ranger ];then
         ln -s $dotfilesdir/configfiles/ranger ~/.config/
     fi
 
     # Vim
     echo "Configuring vim"
-    if [ -e ~/.vim ]; then
-        echo "Deleting ranger directory"
+    if [ -h ~/.vim ]; then
+        echo "Deleting existing symlink ~/.vim"
+        unlink ~/.vim
+    elif [ -d ~/.vim ]; then
+        echo "Deleting vim directory"
         rm -rf ~/.vim
     fi
-    if [ -e $dotfilesdir/configfiles/.vim ];then
-        ln -s $dotfilesdir/configfiles/.vim ~/.vim/
+    if [ -d $dotfilesdir/configfiles/.vim ];then
+        ln -s $dotfilesdir/configfiles/.vim ~
     fi
 
     # If WSL set symlink to Windows Home
     if grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null ; then
         echo "WSL Detected!"
+        if [ -h ~/Windows ]; then
+            unlink ~/Windows
+        fi
         ln -s /mnt/c/Users/${USER} ~/Windows
     fi
+
+    # dos2unix everything
+    dos2unixall $dotfilesdir/configfiles
 
     # Configure language
     #echo "es_ES.UTF-8 UTF-8" > /etc/locale.gen \

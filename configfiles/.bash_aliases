@@ -1,7 +1,7 @@
 alias r='ranger'
 alias python='python3'
-alias dos2unixall='find . -type f -print0 | xargs -0 dos2unix'
 alias d2j='d2j-dex2jar'
+alias dos2unixall='find . -type f -print0 | xargs -0 dos2unix'
 alias dockerip='docker inspect -f "{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}"'
 
 alias cp='cp -iv'                           # 'cp' that doesnt overwrite without asking
