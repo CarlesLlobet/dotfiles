@@ -177,3 +177,6 @@ if grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null ; then
     export DOCKER_CERT_PATH=/mnt/c/Users/${USER}/.docker/machine/certs
     export DOCKER_TLS_VERIFY=1
 fi
+
+# Configure fuck
+eval $(thefuck --alias)
