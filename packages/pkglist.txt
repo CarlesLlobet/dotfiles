@@ -3,6 +3,7 @@ build-essential
 ca-certificates
 curl
 #direnv
+dos2unix
 emacs
 git
 gnupg2
