@@ -16,3 +16,5 @@
         co = checkout
 [ssl]
 	Verify = false
+[core]
+	excludesfile = /Users/krowone9/.gitignore

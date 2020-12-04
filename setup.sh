@@ -72,21 +72,133 @@ if [[ $system_type == "Darwin" ]]; then
         fi
     fi
     echo "Hello Mac User!"
-    echo "Installing Homebrew..."
-    # install homebrew
-    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-    # install pkglist
-    cat $dotfilesdir/packages/pkglist_mac.txt | grep -v "#" | xargs brew install
 
-    # cask installs
-    brew cask install docker
-    brew cask install iterm2
+    architecture=$(uname -m)
+    if [[ $architecture == "arm64" ]]; then
+        echo "Installing Rosetta"
+        softwareupdate --install-rosetta
 
-    defaults write com.apple.dock workspaces-auto-swoosh -bool NO
-    defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+        echo "Installing Homebrew..."
+        # install homebrew
+        arch -x86_64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+        # install pkglist
+        cat $dotfilesdir/packages/pkglist_mac.txt | grep -v "#" | xargs arch -x86_64 brew install
 
-    git config --global core.excludesfile ~/.gitignore
+        # Installing pip
+        curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+        python3 get-pip.py
 
+        # cask installs
+        arch -x86_64 brew cask install docker
+        arch -x86_64 brew cask install iterm2
+
+        defaults write com.apple.dock workspaces-auto-swoosh -bool NO
+        defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+
+        git config --global core.excludesfile ~/.gitignore
+    elif [[ $architecture == "x86_64" ]]; then
+        echo "Installing Homebrew..."
+        # install homebrew
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+        # install pkglist
+        cat $dotfilesdir/packages/pkglist.txt | grep -v "#" | xargs brew install
+
+        # cask installs
+        brew cask install docker
+        brew cask install iterm2
+
+        defaults write com.apple.dock workspaces-auto-swoosh -bool NO
+        defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+
+        git config --global core.excludesfile ~/.gitignore
+    else
+        echo "This dotfiles just support arm64 or x86_64 MacOS architectures. Unrecognized $architecture distribution."
+        exit 1
+    fi
+
+    configfiles="$(find $dotfilesdir/configfiles -maxdepth 1 -type f | awk -F/ '{print $NF}')"
+
+    for file in $configfiles; do
+        if [ -h ~/"$file" ]; then
+            echo "Deleting existing symlink ~/.$file"
+            unlink ~/"$file"
+        elif [ -f ~/"$file" ]; then
+            echo "Deleting existing file ~/.$file"
+            rm -rf ~/"$file" 
+        fi
+        echo "Creating symlink to $file in ~"
+        if [[ $file == ".bashrc" ]]; then
+            ln -s $dotfilesdir/configfiles/.bashrc_mac ~/$file
+        else
+            ln -s $dotfilesdir/configfiles/$file ~/$file
+        fi
+    done
+
+    # Spacemacs
+    if [ -d $dotfilesdir/configfiles/spacemacs ]; then
+        if [ -h ~/.spacemacs ]; then
+                echo "Deleting existing symlink ~/.spacemacs"
+                unlink ~/.spacemacs
+        elif [ -f ~/.spacemacs ]; then
+            echo "Deleting existing file ~/.spacemacs"
+            rm -rf ~/.spacemacs
+        fi
+
+        ln -s $dotfilesdir/configfiles/spacemacs/src/.spacemacs ~/.spacemacs
+        if [ -h ~/.emacs.d ]; then
+                echo "Deleting existing symlink ~/.emacs.d"
+                unlink ~/.emacs.d
+        elif [ -f ~/.emacs.d ]; then
+            echo "Deleting existing file ~/.emacs.d"
+            rm -rf ~/.emacs.d
+        fi
+        ln -s $dotfilesdir/configfiles/spacemacs/src/.emacs.d/ ~/.emacs.d
+        if [ -h ~/.org-capture-templates.el ]; then
+                echo "Deleting existing symlink ~/.org-capture-templates.el"
+                unlink ~/.org-capture-templates.el
+        elif [ -f ~/.org-capture-templates.el ]; then
+            echo "Deleting existing file ~/.org-capture-templates.el"
+            rm -rf ~/.org-capture-templates.el
+        fi
+        ln -s $dotfilesdir/configfiles/spacemacs/docker/src/.org-capture-templates.el ~/.org-capture-templates.el
+    fi
+
+    # Load BashRC
+    echo "Sourcing bashrc"
+    if [ -h ~/.bashrc ]; then
+        source ~/.bashrc
+    fi
+
+    # Ranger
+    echo "Configuring ranger"
+    if [ -h ~/.config/ranger ]; then
+        echo "Deleting existing symlink ~/.config/ranger"
+        unlink ~/.config/ranger
+    elif [ -d ~/.config/ranger ]; then
+        echo "Deleting ranger directory"
+        rm -rf ~/.config/ranger
+    fi
+    if [ -d $dotfilesdir/configfiles/ranger ];then
+        if [ -d ~/.config ]; then
+            ln -s $dotfilesdir/configfiles/ranger ~/.config/
+        else
+            mkdir ~/.config
+            ln -s $dotfilesdir/configfiles/ranger ~/.config/
+        fi
+    fi
+
+    # Vim
+    echo "Configuring vim"
+    if [ -h ~/.vim ]; then
+        echo "Deleting existing symlink ~/.vim"
+        unlink ~/.vim
+    elif [ -d ~/.vim ]; then
+        echo "Deleting vim directory"
+        rm -rf ~/.vim
+    fi
+    if [ -d $dotfilesdir/configfiles/.vim ];then
+        ln -s $dotfilesdir/configfiles/.vim ~
+    fi
 elif [[ $system_type == "Linux" ]]; then
     echo "Hello Linux User!"
 
@@ -326,9 +438,6 @@ elif [[ $system_type == "Linux" ]]; then
         fi
         ln -s $dotfilesdir/configfiles/spacemacs/docker/src/.org-capture-templates.el ~/.org-capture-templates.el
     fi
-    # Install fonts
-    echo "Installing fonts"
-    sudo fc-cache -fv
 
     # Load BashRC
     echo "Sourcing bashrc"
@@ -346,7 +455,12 @@ elif [[ $system_type == "Linux" ]]; then
         rm -rf ~/.config/ranger
     fi
     if [ -d $dotfilesdir/configfiles/ranger ];then
-        ln -s $dotfilesdir/configfiles/ranger ~/.config/
+        if [ -d ~/.config ]; then
+            ln -s $dotfilesdir/configfiles/ranger ~/.config/
+        else
+            mkdir ~/.config
+            ln -s $dotfilesdir/configfiles/ranger ~/.config/
+        fi
     fi
 
     # Vim

@@ -1,7 +1,9 @@
 # Author: Carles Llobet
 
 # Colors definition
-alias cpu="grep 'cpu ' /proc/stat | awk '{usage=(\$2+\$4)*100/(\$2+\$4+\$5)} END {print usage}' | awk '{printf(\"%.1f\n\", \$1)}'"
+alias cpu="ps -A -o %cpu | awk '{s+=\$1}END{print s\"%\"}'"
+alias procnum="ps -A | wc -l | sed 's/^ *//'"
+
 function __setprompt
 {
     local LAST_COMMAND=$? # Must come first!
@@ -69,16 +71,13 @@ function __setprompt
 
     # Date
     PS1+="\[${DARKGRAY}\](\[${CYAN}\]\$(date +%a) $(date +%b-'%-m')" # Date
-    PS1+="${CYAN} $(date +'%-I':%M:%S%P)\[${DARKGRAY}\])-" # Time
+    PS1+="${CYAN} $(date +'%-I':%M:%S)\[${DARKGRAY}\])-" # Time
 
     # CPU
-    PS1+="(\[${MAGENTA}\]CPU $(cpu)%"
+    PS1+="(\[${MAGENTA}\]CPU $(cpu)"
 
     # Jobs
-    PS1+="\[${DARKGRAY}\]:\[${MAGENTA}\]\j"
-
-    # Network Connections (for a server - comment out for non-server)
-    PS1+="\[${DARKGRAY}\]:\[${MAGENTA}\]Net $(awk 'END {print NR}' /proc/net/tcp)"
+    PS1+="\[${DARKGRAY}\]:\[${MAGENTA}\]$(procnum)"
 
     PS1+="\[${DARKGRAY}\])-"
 
@@ -95,10 +94,10 @@ function __setprompt
     PS1+="\[${DARKGRAY}\]:\[${BROWN}\]\w\[${DARKGRAY}\])-"
 
     # Total size of files in current directory
-    PS1+="(\[${GREEN}\]$(/bin/ls -lah | /bin/grep -m 1 total | /bin/sed 's/total //')\[${DARKGRAY}\]:"
+    PS1+="(\[${GREEN}\]$(/bin/ls -lah | grep -m 1 total | sed 's/total //')\[${DARKGRAY}\]:"
 
     # Number of files
-    PS1+="\[${GREEN}\]\$(/bin/ls -A -1 | /usr/bin/wc -l)\[${DARKGRAY}\])"
+    PS1+="\[${GREEN}\]$(/bin/ls -A -1 | /usr/bin/wc -l | sed 's/^ *//')\[${DARKGRAY}\])"
 
     # Skip to the next line
     PS1+="\n"
@@ -168,6 +167,7 @@ mcd () { mkdir -p "$1" && cd "$1"; }        # mcd: Makes new Dir and jumps insid
 # Exports 
 VISUAL=editor; export VISUAL EDITOR=editor; export EDITOR
 export MYVIMRC=~/.vimrc
+export BASH_SILENCE_DEPRECATION_WARNING=1
 
 if grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null ; then
     # This is for a docker-tools installation in windows to use with VBox Hipervisor
