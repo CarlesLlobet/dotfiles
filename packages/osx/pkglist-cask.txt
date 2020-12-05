@@ -1,0 +1,4 @@
+android-platform-tools
+docker
+iterm2
+tiles

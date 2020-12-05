@@ -73,6 +73,35 @@ if [[ $system_type == "Darwin" ]]; then
     fi
     echo "Hello Mac User!"
 
+    ### Select APT repositories to add###
+    echo "Adding APT repositories"
+
+    repositories=$(cat $dotfilesdir/repositories/osx/repos.txt | grep -v "#")
+    if [[ $profile == "pentester" || $profile == "full" ]]; then
+        repositories=$repositories$'\n'"$(cat $dotfilesdir/repositories/osx/repos_pentester.txt | grep -v "#")"
+    elif [[ $profile == "developer" || $profile == "full" ]]; then
+        repositories=$repositories$'\n'"$(cat $dotfilesdir/repositories/osx/repos_developer.txt | grep -v "#")"
+    elif [[ $profile == "server" || $profile == "full" ]]; then
+        repositories=$repositories$'\n'"$(cat $dotfilesdir/repositories/osx/repos_server.txt | grep -v "#")"
+    fi
+
+    for repo in $repositories; do
+        brew tap $repo
+    done
+
+    installpackages=$(cat $dotfilesdir/packages/osx/pkglist.txt | grep -v "#")
+    caskpackages=$(cat $dotfilesdir/packages/osx/pkglist-cask.txt | grep -v "#")
+    if [[ $profile == "pentester" || $profile == "full" ]]; then
+        installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/osx/pkglist_pentester.txt | grep -v "#")"
+        caskpackages=$caskpackages$'\n'"$(cat $dotfilesdir/packages/osx/pkglist_pentester-cask.txt | grep -v "#")"
+    elif [[ $profile == "developer" || $profile == "full" ]]; then
+        installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/osx/pkglist_developer.txt | grep -v "#")"
+        caskpackages=$caskpackages$'\n'"$(cat $dotfilesdir/packages/osx/pkglist_developer-cask.txt | grep -v "#")"
+    elif [[ $profile == "server" || $profile == "full" ]]; then
+        installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/osx/pkglist_server.txt | grep -v "#")"
+        caskpackages=$caskpackages$'\n'"$(cat $dotfilesdir/packages/osx/pkglist_server-cask.txt | grep -v "#")"
+    fi
+
     architecture=$(uname -m)
     if [[ $architecture == "arm64" ]]; then
         echo "Installing Rosetta"
@@ -82,39 +111,35 @@ if [[ $system_type == "Darwin" ]]; then
         # install homebrew
         arch -x86_64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
         # install pkglist
-        cat $dotfilesdir/packages/pkglist_mac.txt | grep -v "#" | xargs arch -x86_64 brew install
-
-        # Installing pip
-        curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-        python3 get-pip.py
-
-        # cask installs
-        arch -x86_64 brew cask install docker
-        arch -x86_64 brew cask install iterm2
-
-        defaults write com.apple.dock workspaces-auto-swoosh -bool NO
-        defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
-
-        git config --global core.excludesfile ~/.gitignore
+        for file in $installpackages; do
+            arch -x86_64 brew install $file
+        done
+        for file in $caskpackages; do
+            arch -x86_64 brew install --cask $file
+        done
     elif [[ $architecture == "x86_64" ]]; then
         echo "Installing Homebrew..."
         # install homebrew
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
         # install pkglist
-        cat $dotfilesdir/packages/pkglist.txt | grep -v "#" | xargs brew install
-
-        # cask installs
-        brew cask install docker
-        brew cask install iterm2
-
-        defaults write com.apple.dock workspaces-auto-swoosh -bool NO
-        defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
-
-        git config --global core.excludesfile ~/.gitignore
+        for file in $installpackages; do
+            brew install $file
+        done
+        for file in $caskpackages; do
+            brew install --cask $file
+        done
     else
         echo "This dotfiles just support arm64 or x86_64 MacOS architectures. Unrecognized $architecture distribution."
         exit 1
     fi
+    # Installing pip
+    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+    python3 get-pip.py
+
+    defaults write com.apple.dock workspaces-auto-swoosh -bool NO
+    defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+
+    git config --global core.excludesfile ~/.gitignore
 
     configfiles="$(find $dotfilesdir/configfiles -maxdepth 1 -type f | awk -F/ '{print $NF}')"
 
@@ -128,7 +153,7 @@ if [[ $system_type == "Darwin" ]]; then
         fi
         echo "Creating symlink to $file in ~"
         if [[ $file == ".bashrc" ]]; then
-            ln -s $dotfilesdir/configfiles/.bashrc_mac ~/$file
+            ln -s $dotfilesdir/configfiles/.bashrc_osx ~/$file
         else
             ln -s $dotfilesdir/configfiles/$file ~/$file
         fi
@@ -209,13 +234,13 @@ elif [[ $system_type == "Linux" ]]; then
 
     
     if [ "$interactive" = "1" ]; then
-        addedrepositories=$(cat $dotfilesdir/repositories/repos.txt | grep -v "#" | awk -F'\n' '{print $1 "|ON"}')
+        addedrepositories=$(cat $dotfilesdir/repositories/linux/repos.txt | grep -v "#" | awk -F'\n' '{print $1 "|ON"}')
         if [[ $profile == "pentester" || $profile == "full" ]]; then
-            addedrepositories=$addedrepositories$'|'"$(cat $dotfilesdir/repositories/repos_pentester.txt | grep -v "#" | awk -F'\n' '{print $1 "|ON"}')"
+            addedrepositories=$addedrepositories$'|'"$(cat $dotfilesdir/repositories/linux/repos_pentester.txt | grep -v "#" | awk -F'\n' '{print $1 "|ON"}')"
         elif [[ $profile == "developer" || $profile == "full" ]]; then
-            addedrepositories=$addedrepositories$'|'"$(cat $dotfilesdir/repositories/repos_developer.txt | grep -v "#" | awk -F'\n' '{print $1 "|ON"}')"
+            addedrepositories=$addedrepositories$'|'"$(cat $dotfilesdir/repositories/linux/repos_developer.txt | grep -v "#" | awk -F'\n' '{print $1 "|ON"}')"
         elif [[ $profile == "server" || $profile == "full" ]]; then
-            addedrepositories=$addedrepositories$'|'"$(cat $dotfilesdir/repositories/repos_server.txt | grep -v "#" | awk -F'\n' '{print $1 "|ON"}')"
+            addedrepositories=$addedrepositories$'|'"$(cat $dotfilesdir/repositories/linux/repos_server.txt | grep -v "#" | awk -F'\n' '{print $1 "|ON"}')"
         fi
 
         IFS=$'|'
@@ -279,13 +304,13 @@ elif [[ $system_type == "Linux" ]]; then
 
     if [ "$interactive" = "1" ]; then
 
-        installpackages=$(cat $dotfilesdir/packages/pkglist.txt | grep -v "#" | awk '{print $1 " ON"}')
+        installpackages=$(cat $dotfilesdir/packages/linux/pkglist.txt | grep -v "#" | awk '{print $1 " ON"}')
         if [[ $profile == "pentester" || $profile == "full" ]]; then
-            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/pkglist_pentester.txt | grep -v "#" | awk '{print $1 " ON"}')"
+            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/linux/pkglist_pentester.txt | grep -v "#" | awk '{print $1 " ON"}')"
         elif [[ $profile == "developer" || $profile == "full" ]]; then
-            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/pkglist_developer.txt | grep -v "#" | awk '{print $1 " ON"}')"
+            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/linux/pkglist_developer.txt | grep -v "#" | awk '{print $1 " ON"}')"
         elif [[ $profile == "server" || $profile == "full" ]]; then
-            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/pkglist_server.txt | grep -v "#" | awk '{print $1 " ON"}')"
+            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/linux/pkglist_server.txt | grep -v "#" | awk '{print $1 " ON"}')"
         fi
 
         installpackagesarray=($installpackages)
@@ -301,13 +326,13 @@ elif [[ $system_type == "Linux" ]]; then
             fi
         fi
     else
-        installpackages=$(cat $dotfilesdir/packages/pkglist.txt | grep -v "#" | awk '{print $1}')
+        installpackages=$(cat $dotfilesdir/packages/linux/pkglist.txt | grep -v "#" | awk '{print $1}')
         if [[ $profile == "pentester" || $profile == "full" ]]; then
-            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/pkglist_pentester.txt | grep -v "#" | awk '{print $1}')"
+            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/linux/pkglist_pentester.txt | grep -v "#" | awk '{print $1}')"
         elif [[ $profile == "developer" || $profile == "full" ]]; then
-            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/pkglist_developer.txt | grep -v "#" | awk '{print $1}')"
+            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/linux/pkglist_developer.txt | grep -v "#" | awk '{print $1}')"
         elif [[ $profile == "server" || $profile == "full" ]]; then
-            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/pkglist_server.txt | grep -v "#" | awk '{print $1}')"
+            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/linux/pkglist_server.txt | grep -v "#" | awk '{print $1}')"
         fi
 
         selectedpackages=$installpackages

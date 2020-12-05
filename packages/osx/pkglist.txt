@@ -1,0 +1,14 @@
+bash
+bash-completion
+curl
+dos2unix
+emacs
+git
+gnupg2
+htop
+pandoc
+ranger
+thefuck
+tmux
+vim
+xclip
