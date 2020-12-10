@@ -6,6 +6,7 @@ emacs
 git
 gnupg2
 htop
+inetutils
 pandoc
 ranger
 thefuck

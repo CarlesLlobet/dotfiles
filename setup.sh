@@ -135,9 +135,11 @@ if [[ $system_type == "Darwin" ]]; then
     # Installing pip
     curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
     python3 get-pip.py
-
+  
+    #Configuring some Apple basics
     defaults write com.apple.dock workspaces-auto-swoosh -bool NO
     defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+    defaults write com.apple.Dock showhidden -bool YES
 
     git config --global core.excludesfile ~/.gitignore
 
