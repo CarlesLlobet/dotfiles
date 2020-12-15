@@ -22,6 +22,11 @@ if [ -d "$HOME/bin" ] ; then
 fi
 
 # set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/.local/bin" ] ; then
+if [ -d "$HOME/.local/bin" ]; then
     PATH="$HOME/.local/bin:$PATH"
+fi
+
+# set PATH so it includes checkra1n if it exists
+if [ -d "/Applications/checkra1n.app" ]; then
+    PATH="/Applications/checkra1n.app/Contents/MacOS:$PATH"
 fi
