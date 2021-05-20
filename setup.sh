@@ -106,32 +106,17 @@ if [[ $system_type == "Darwin" ]]; then
     if [[ $architecture == "arm64" ]]; then
         echo "Installing Rosetta"
         softwareupdate --install-rosetta
-
-        echo "Installing Homebrew..."
-        # install homebrew
-        arch -x86_64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
-        # install pkglist
-        for file in $installpackages; do
-            arch -x86_64 brew install $file
-        done
-        for file in $caskpackages; do
-            arch -x86_64 brew install --cask $file
-        done
-    elif [[ $architecture == "x86_64" ]]; then
-        echo "Installing Homebrew..."
-        # install homebrew
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
-        # install pkglist
-        for file in $installpackages; do
-            brew install $file
-        done
-        for file in $caskpackages; do
-            brew install --cask $file
-        done
-    else
-        echo "This dotfiles just support arm64 or x86_64 MacOS architectures. Unrecognized $architecture distribution."
-        exit 1
     fi
+    echo "Installing Homebrew..."
+    # install homebrew
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+    # install pkglist
+    for file in $installpackages; do
+        brew install $file
+    done
+    for file in $caskpackages; do
+        brew install --cask $file
+    done
     # Installing pip
     curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
     python3 get-pip.py

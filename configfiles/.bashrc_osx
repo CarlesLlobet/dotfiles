@@ -178,4 +178,4 @@ if grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null ; then
 fi
 
 # Configure fuck
-eval $(thefuck --alias)
+eval "$(/opt/homebrew/bin/thefuck --alias)"

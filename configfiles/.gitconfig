@@ -18,3 +18,4 @@
 	Verify = false
 [core]
 	excludesfile = /Users/krowone9/.gitignore
+	autocrlf = input
