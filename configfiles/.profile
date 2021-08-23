@@ -35,3 +35,7 @@ fi
 if [ -d "/Applications/checkra1n.app" ]; then
     PATH="/Applications/checkra1n.app/Contents/MacOS:$PATH"
 fi
+
+# set Language locales
+export LC_CTYPE=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
