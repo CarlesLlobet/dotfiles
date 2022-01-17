@@ -6,6 +6,7 @@ build-essential
 ca-certificates
 curl
 #direnv
+docker-compose
 dos2unix
 git
 gnupg2
