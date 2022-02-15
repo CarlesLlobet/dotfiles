@@ -234,8 +234,9 @@ elif [[ $system_type == "Linux" ]]; then
         addedrepositoriesarray=($addedrepositories)
         IFS=$' \t\n'
 
-        if [ ${#addedrepositoriesarray[@]} > 1 ]; then
-        
+        if [ ${#addedrepositoriesarray[@]} -gt 1 ]; then
+        	echo "Test"
+		echo $addedrepositoriesarray
             selectedrepositories=$(whiptail --title "Repositories selected for $profile profile" --separate-output --noitem --checklist "" 16 98 10 "${addedrepositoriesarray[@]}" 3>&1 1>&2 2>&3)
 
             exitstatus=$?
