@@ -17,7 +17,7 @@
 [ssl]
 	Verify = false
 [core]
-	excludesfile = /Users/krowone9/.gitignore
+	excludesfile = /Users/carles.llobet/.gitignore
 	autocrlf = input
 [init]
 	defaultBranch = master

@@ -141,6 +141,8 @@ if [[ $system_type == "Darwin" ]]; then
         echo "Creating symlink to $file in ~"
         if [[ $file == ".bashrc" ]]; then
             ln -s $dotfilesdir/configfiles/.bashrc_osx ~/$file
+        elif [[ $file == ".profile" ]]; then
+            ln -s $dotfilesdir/configfiles/.profile_osx ~/$file
         else
             ln -s $dotfilesdir/configfiles/$file ~/$file
         fi
