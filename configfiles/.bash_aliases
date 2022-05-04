@@ -24,3 +24,12 @@ alias plutil="plistutil"
 #alias v='vim --remote-silent'
 #alias tmux="TERM=screen-256color-bce tmux"
 #alias tmux="tmux -2 attach"
+
+## Personio dev
+alias pc="/opt/homebrew/bin/perctl"
+alias mc="~/dev/personio/monolith-cli"
+alias per="cd ~/dev/personio"
+alias reload="pc refresh && pc artisan personio:i18n-json && per && rm -rf node_modules && yarn install --pure-lockfile && yarn run start"
+alias reload-mysql="pc build dev && pc recreate mysql && pc recreate web"
+alias laravel-log="tail -20f app/storage-local/logs/laravel.log"
+alias storage-777="sudo chmod -R 777 app/storage-local/ && sudo chmod -R 777 app/storage"
