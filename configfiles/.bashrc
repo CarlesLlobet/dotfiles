@@ -169,7 +169,7 @@ mcd () { mkdir -p "$1" && cd "$1"; }        # mcd: Makes new Dir and jumps insid
 VISUAL=editor; export VISUAL EDITOR=editor; export EDITOR
 export MYVIMRC=~/.vimrc
 
-if grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null ; then
+if grep -qE "(?!WSL2)(Microsoft|WSL)" /proc/version &> /dev/null ; then
     # This is for a docker-tools installation in windows to use with VBox Hipervisor
     # if you use docker with Windows Hiper-V and don't have VBox, use 127.0.0.1:2376
     export DOCKER_HOST=tcp://192.168.99.100:2376  # your Docker IP

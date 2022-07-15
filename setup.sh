@@ -141,6 +141,8 @@ if [[ $system_type == "Darwin" ]]; then
         echo "Creating symlink to $file in ~"
         if [[ $file == ".bashrc" ]]; then
             ln -s $dotfilesdir/configfiles/.bashrc_osx ~/$file
+        elif [[ $file == ".profile" ]]; then
+            ln -s $dotfilesdir/configfiles/.profile_osx ~/$file
         else
             ln -s $dotfilesdir/configfiles/$file ~/$file
         fi
@@ -234,8 +236,9 @@ elif [[ $system_type == "Linux" ]]; then
         addedrepositoriesarray=($addedrepositories)
         IFS=$' \t\n'
 
-        if [ ${#addedrepositoriesarray[@]} != 0 ]; then
-        
+        if [ ${#addedrepositoriesarray[@]} -gt 1 ]; then
+        	echo "Test"
+		echo $addedrepositoriesarray
             selectedrepositories=$(whiptail --title "Repositories selected for $profile profile" --separate-output --noitem --checklist "" 16 98 10 "${addedrepositoriesarray[@]}" 3>&1 1>&2 2>&3)
 
             exitstatus=$?
@@ -245,13 +248,16 @@ elif [[ $system_type == "Linux" ]]; then
             fi
         fi
     else
-        addedrepositories=$(cat $dotfilesdir/repositories/repos.txt | grep -v "#" | awk -F'\n' '{print $1}')
+        addedrepositories=$(cat $dotfilesdir/repositories/linux/repos.txt | grep -v "#" | awk -F'\n' '{print $1}')
         if [[ $profile == "pentester" || $profile == "full" ]]; then
-            addedrepositories=$addedrepositories$'|'"$(cat $dotfilesdir/repositories/repos_pentester.txt | grep -v "#" | awk -F'\n' '{print $1}')"
+            addedrepositories=$addedrepositories$'|'"$(cat
+            $dotfilesdir/repositories/linux/repos_pentester.txt | grep -v "#" | awk -F'\n' '{print $1}')"
         elif [[ $profile == "developer" || $profile == "full" ]]; then
-            addedrepositories=$addedrepositories$'|'"$(cat $dotfilesdir/repositories/repos_developer.txt | grep -v "#" | awk -F'\n' '{print $1}')"
+            addedrepositories=$addedrepositories$'|'"$(cat
+            $dotfilesdir/repositories/linux/repos_developer.txt | grep -v "#" | awk -F'\n' '{print $1}')"
         elif [[ $profile == "server" || $profile == "full" ]]; then
-            addedrepositories=$addedrepositories$'|'"$(cat $dotfilesdir/repositories/repos_server.txt | grep -v "#" | awk -F'\n' '{print $1}')"
+            addedrepositories=$addedrepositories$'|'"$(cat
+            $dotfilesdir/repositories/linux/repos_server.txt | grep -v "#" | awk -F'\n' '{print $1}')"
         fi
         IFS=$'|'
         selectedrepositories=($addedrepositories)
