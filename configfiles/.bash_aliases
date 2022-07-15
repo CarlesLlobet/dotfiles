@@ -19,6 +19,7 @@ alias upppppp='cd ../../../../../../'       # Go back 6 directory levels
 
 alias qfind="find . -iname "
 alias plutil="plistutil"
+alias speedtest="curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python -"
 #alias vkill='kill $(ps aux|grep firefox|grep opt|grep -Eow [0-9]{5})'
 #alias vlc='vlc --control dbus'
 #alias v='vim --remote-silent'

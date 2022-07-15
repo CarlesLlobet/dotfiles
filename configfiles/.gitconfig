@@ -19,3 +19,5 @@
 [core]
 	excludesfile = /Users/krowone9/.gitignore
 	autocrlf = input
+[pull]
+	rebase = false
