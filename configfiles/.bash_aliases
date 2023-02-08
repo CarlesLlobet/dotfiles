@@ -4,6 +4,7 @@ alias pip='pip3'
 alias d2j='d2j-dex2jar'
 alias dos2unixall='find . -type f -print0 | xargs -0 dos2unix'
 alias dockerip='docker inspect -f "{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}"'
+alias dockerupdate='docker-compose pull && docker-compose --build -d'
 
 alias cp='cp -iv'                           # 'cp' that doesnt overwrite without asking
 alias mv='mv -iv'                           # 'mv' that doesnt overwrite without asking
