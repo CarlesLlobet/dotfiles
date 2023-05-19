@@ -5,6 +5,8 @@ This project aims to avoid cumbersome configurations when working in a new envir
 
 ![](demo.gif)
 
+<a href="https://www.buymeacoffee.com/carlesllobet" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
+
 ## Getting Started
 
 These instructions will get you a copy of the environment configuration up and running on your local machine. 
