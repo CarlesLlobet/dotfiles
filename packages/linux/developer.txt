@@ -7,4 +7,8 @@ exuberant-ctags
 guake
 libc6-dev
 libpoppler-glib-dev
+qemu-kvm
+qemu
 scrot
+virt-manager
+virt-viewer
