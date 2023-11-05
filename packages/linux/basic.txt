@@ -9,6 +9,7 @@ curl
 dos2unix
 git
 golang-go
+gom
 gnupg2
 gnutls-bin
 htop

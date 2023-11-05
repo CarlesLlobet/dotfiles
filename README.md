@@ -140,6 +140,7 @@ Basic packages needed in any environment.
 * [flameshot](https://flameshot.org/) (Snap) - Powerful, yet simple to use open-source screenshot software.
 * [git](https://git-scm.com/) (APT) - The only VCS that really matters
 * [golang-go](https://go.dev/) (APT) - The Go Programming Language
+* [gom](https://github.com/mattn/gom) (APT) - The Go Manager
 * [gnupg2](https://gnupg.org/) (APT) - OpenPGP implementation to cypher and decypher
 * [gnutls-bin](https://www.gnutls.org/) (APT) - TLS SSL and DTLS to do secure communications
 * [htop](https://linux.die.net/man/1/htop) (APT) - Interactive Process Viewer
