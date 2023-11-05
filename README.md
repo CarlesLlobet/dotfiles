@@ -134,6 +134,7 @@ Specific packages for cybersecurity engineers.
 
 * [afl-triforce](https://github.com/nccgroup/TriforceAFL) - AFL/QEMU fuzzer with full-system emulation
 * [ccpchecker](http://cppcheck.sourceforge.net/) - Tool for Source Code Review (Static analysis of code)
+* [feroxbuster](https://github.com/epi052/feroxbuster) - A simple, fast, recursive content discovery tool written in Rust
 * [gef](https://gef.readthedocs.io/en/master/) - GDB Plugin with extended features
 * [ghidra](https://ghidra-sre.org/) - RE suite (Disassembler, Decompiler, ...)
 * [katoolin](https://github.com/LionSec/katoolin) - To install automatically Kali Linux Tools
