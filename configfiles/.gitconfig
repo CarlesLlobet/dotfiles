@@ -2,6 +2,7 @@
 	email = krow.boarder.9@gmail.com
 	name = Carles Llobet
 	author = Carles Llobet
+	signingkey = E085D9086F267AD45EFB4819A20AEF6F8E7E6316
 [push]
 	default = matching
 [diff]
@@ -22,4 +23,4 @@
 [pull]
 	rebase = false
 [init]
-	defaultBranch = master
+	defaultBranch = main

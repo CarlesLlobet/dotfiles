@@ -39,3 +39,12 @@ fi
 # set Language locales
 export LC_CTYPE=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
+
+##
+# Your previous /Users/carles.llobet/.profile file was backed up as /Users/carles.llobet/.profile.macports-saved_2023-06-23_at_10:32:04
+##
+
+# MacPorts Installer addition on 2023-06-23_at_10:32:04: adding an appropriate PATH variable for use with MacPorts.
+export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
+# Finished adapting your PATH environment variable for use with MacPorts.
+
