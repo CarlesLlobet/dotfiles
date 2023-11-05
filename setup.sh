@@ -334,24 +334,24 @@ elif [[ $system_type == "Linux" ]]; then
     sudo apt update && sudo apt-get install -y $selectedpackages
     
     ### Install Manual tools ###
-    echo "Installing Manual tools from installscripts of $profile profile"
+    echo "Installing Manual tools from scripts of $profile profile"
 
     if [ "$interactive" = "1" ]; then
 
         if [[ $profile == "full" ]]; then
-            installscripts="$(find $dotfilesdir/installscripts -maxdepth 2 -type f | awk -F/ '{print $(NF-1)"/"$NF" ON"}')"
+            scripts="$(find $dotfilesdir/scripts -maxdepth 2 -type f | awk -F/ '{print $(NF-1)"/"$NF" ON"}')"
         else
-            installscripts="$(find $dotfilesdir/installscripts/basic -maxdepth 1 -type f | awk -F/ '{print $(NF-1)"/"$NF" ON"}')"
+            scripts="$(find $dotfilesdir/scripts/basic -maxdepth 1 -type f | awk -F/ '{print $(NF-1)"/"$NF" ON"}')"
             if [[ $profile != "basic" ]]; then
-                installscripts=$installscripts$'\n'"$(find $dotfilesdir/installscripts/$profile -maxdepth 1 -type f | awk -F/ '{print $(NF-1)"/"$NF" ON"}')"
+                scripts=$scripts$'\n'"$(find $dotfilesdir/scripts/$profile -maxdepth 1 -type f | awk -F/ '{print $(NF-1)"/"$NF" ON"}')"
             fi
         fi
 
-        installscriptsarray=($installscripts)
+        scriptsarray=($scripts)
 
-        if [ ${#installscriptsarray[@]} != 0 ]; then
+        if [ ${#scriptsarray[@]} != 0 ]; then
         
-            selectedscripts=$(whiptail --title "Install scripts selected for $profile profile" --separate-output --noitem --checklist "" 16 58 10 "${installscriptsarray[@]}" 3>&1 1>&2 2>&3)
+            selectedscripts=$(whiptail --title "Install scripts selected for $profile profile" --separate-output --noitem --checklist "" 16 58 10 "${scriptsarray[@]}" 3>&1 1>&2 2>&3)
 
             exitstatus=$?
             if [ $exitstatus != 0 ]; then
@@ -361,23 +361,23 @@ elif [[ $system_type == "Linux" ]]; then
         fi
     else
         if [[ $profile == "full" ]]; then
-            installscripts="$(find $dotfilesdir/installscripts -maxdepth 2 -type f | awk -F/ '{print $(NF-1)"/"$NF}')"
+            scripts="$(find $dotfilesdir/scripts -maxdepth 2 -type f | awk -F/ '{print $(NF-1)"/"$NF}')"
         else
-            installscripts="$(find $dotfilesdir/installscripts/basic -maxdepth 1 -type f | awk -F/ '{print $(NF-1)"/"$NF}')"
+            scripts="$(find $dotfilesdir/scripts/basic -maxdepth 1 -type f | awk -F/ '{print $(NF-1)"/"$NF}')"
             if [[ $profile != "basic" ]]; then
-                installscripts=$installscripts$'\n'"$(find $dotfilesdir/installscripts/$profile -maxdepth 1 -type f | awk -F/ '{print $(NF-1)"/"$NF}')"
+                scripts=$scripts$'\n'"$(find $dotfilesdir/scripts/$profile -maxdepth 1 -type f | awk -F/ '{print $(NF-1)"/"$NF}')"
             fi
         fi
 
-        selectedscripts=$installscripts
+        selectedscripts=$scripts
     fi
 
     for script in $selectedscripts; do
         echo "Installing script $script"
         if [[ "$(echo $script | awk -F/ '{print $NF}')" == "requirements.txt" ]]; then
-            pip install -r "$dotfilesdir/installscripts/$script"
+            pip install -r "$dotfilesdir/scripts/$script"
         else
-            source "$dotfilesdir/installscripts/$script"
+            source "$dotfilesdir/scripts/$script"
         fi
     done
 
