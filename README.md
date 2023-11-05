@@ -56,7 +56,7 @@ This specific package is always installed from the setup script in order to add 
 ### Basic
 Basic packages needed in any environment.
 
-###### APT Packages
+###### APT/Brew Packages
 
 * [apt-transport-https](https://manpages.ubuntu.com/manpages/bionic/man1/apt-transport-https.1.html) - To download from APT via HTTPS
 * [build-essential](https://packages.debian.org/es/sid/build-essential) - C and C++ compilers, with libc and dpkg-dev, make, etc.
@@ -65,6 +65,7 @@ Basic packages needed in any environment.
 * [default-jre](https://packages.debian.org/stretch/default-jre) - Java Runtime Environment for Java based applications
 * [direnv](https://direnv.net/) - Loads different ENV variables depending on the PWD automatically
 * [Emacs](https://www.gnu.org/software/emacs/) - GUI Text Editor
+* [flameshot](https://flameshot.org/) - Powerful, yet simple to use open-source screenshot software.
 * [git](https://git-scm.com/) - The only VCS that really matters
 * [gnupg2](https://gnupg.org/) - OpenPGP implementation to cypher and decypher
 * [gnutls-bin](https://www.gnutls.org/) - TLS SSL and DTLS to do secure communications
@@ -96,10 +97,14 @@ Basic packages needed in any environment.
 
 * N/A
 
+###### Go packages
+
+* N/A
+
 ### Developer
 Specific packages for developers.
 
-###### APT Packages
+###### APT/Brew Packages
 
 * [autotools-dev](https://developer.fedoraproject.org/tech/languages/c/autotools.html) - Required by automake (below)
 * [automake](https://www.gnu.org/software/automake/) - To generate Makefiles regardless of the environment (Linux dist, installed packages,...)
@@ -114,11 +119,15 @@ Specific packages for developers.
 ###### Pip packages
 
 * N/A
+
+###### Go packages
+
+* N/A
  
 ### Pentester
 Specific packages for cybersecurity engineers.
 
-###### APT Packages
+###### APT/Brew Packages
 
 * [binwalk](https://github.com/ReFirmLabs/binwalk) - RE tool to analyze and extract firmware images
 * [cscope](http://cscope.sourceforge.net/) - Browse C Source Code (even C++ and Java)
@@ -149,10 +158,16 @@ Specific packages for cybersecurity engineers.
 * [flawfinder](https://dwheeler.com/flawfinder/) - C/C++ source code analyzer
 * [ropper](https://github.com/sashs/Ropper) - Display useful info to find ROP chains 
 
+###### Go packages
+
+* [dalfox](https://github.com/hahwul/dalfox) - A powerful open-source XSS scanner
+* [dnsx](https://github.com/projectdiscovery/dnsx) - A fast and multi-purpose DNS toolkit designed for running DNS queries
+* [ffuf](https://github.com/ffuf/ffuf) - A fast web fuzzer written in Go
+
 ### Server
 Specific packages for servers.
 
-###### APT Packages
+###### APT/Brew Packages
 
 * [net-tools](http://net-tools.sourceforge.net/) - Collection of network utilities for Linux
 * [openssh-server](https://help.ubuntu.com/lts/serverguide/openssh-server.html) - To create an SSH Server
@@ -162,6 +177,10 @@ Specific packages for servers.
 * [Docker](https://www.docker.com/) - Application virtualization software
 
 ###### Pip packages
+
+* N/A
+
+###### Go packages
 
 * N/A
 

@@ -12,6 +12,7 @@ golang-go
 gnupg2
 gnutls-bin
 htop
+openjdk-17-jdk
 pandoc
 python-pygments
 python3

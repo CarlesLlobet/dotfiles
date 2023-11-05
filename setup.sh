@@ -76,30 +76,30 @@ if [[ $system_type == "Darwin" ]]; then
     ### Select APT repositories to add###
     echo "Adding APT repositories"
 
-    repositories=$(cat $dotfilesdir/repositories/osx/repos.txt | grep -v "#")
+    repositories=$(cat $dotfilesdir/repositories/osx/basic.txt | grep -v "#")
     if [[ $profile == "pentester" || $profile == "full" ]]; then
-        repositories=$repositories$'\n'"$(cat $dotfilesdir/repositories/osx/repos_pentester.txt | grep -v "#")"
+        repositories=$repositories$'\n'"$(cat $dotfilesdir/repositories/osx/pentester.txt | grep -v "#")"
     elif [[ $profile == "developer" || $profile == "full" ]]; then
-        repositories=$repositories$'\n'"$(cat $dotfilesdir/repositories/osx/repos_developer.txt | grep -v "#")"
+        repositories=$repositories$'\n'"$(cat $dotfilesdir/repositories/osx/developer.txt | grep -v "#")"
     elif [[ $profile == "server" || $profile == "full" ]]; then
-        repositories=$repositories$'\n'"$(cat $dotfilesdir/repositories/osx/repos_server.txt | grep -v "#")"
+        repositories=$repositories$'\n'"$(cat $dotfilesdir/repositories/osx/server.txt | grep -v "#")"
     fi
 
     for repo in $repositories; do
         brew tap $repo
     done
 
-    installpackages=$(cat $dotfilesdir/packages/osx/pkglist.txt | grep -v "#")
-    caskpackages=$(cat $dotfilesdir/packages/osx/pkglist-cask.txt | grep -v "#")
+    installpackages=$(cat $dotfilesdir/packages/osx/basic.txt | grep -v "#")
+    caskpackages=$(cat $dotfilesdir/packages/osx/basic-cask.txt | grep -v "#")
     if [[ $profile == "pentester" || $profile == "full" ]]; then
-        installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/osx/pkglist_pentester.txt | grep -v "#")"
-        caskpackages=$caskpackages$'\n'"$(cat $dotfilesdir/packages/osx/pkglist_pentester-cask.txt | grep -v "#")"
+        installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/osx/pentester.txt | grep -v "#")"
+        caskpackages=$caskpackages$'\n'"$(cat $dotfilesdir/packages/osx/pentester-cask.txt | grep -v "#")"
     elif [[ $profile == "developer" || $profile == "full" ]]; then
-        installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/osx/pkglist_developer.txt | grep -v "#")"
-        caskpackages=$caskpackages$'\n'"$(cat $dotfilesdir/packages/osx/pkglist_developer-cask.txt | grep -v "#")"
+        installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/osx/developer.txt | grep -v "#")"
+        caskpackages=$caskpackages$'\n'"$(cat $dotfilesdir/packages/osx/developer-cask.txt | grep -v "#")"
     elif [[ $profile == "server" || $profile == "full" ]]; then
-        installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/osx/pkglist_server.txt | grep -v "#")"
-        caskpackages=$caskpackages$'\n'"$(cat $dotfilesdir/packages/osx/pkglist_server-cask.txt | grep -v "#")"
+        installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/osx/server.txt | grep -v "#")"
+        caskpackages=$caskpackages$'\n'"$(cat $dotfilesdir/packages/osx/server-cask.txt | grep -v "#")"
     fi
 
     architecture=$(uname -m)
@@ -223,13 +223,13 @@ elif [[ $system_type == "Linux" ]]; then
 
     
     if [ "$interactive" = "1" ]; then
-        addedrepositories=$(cat $dotfilesdir/repositories/linux/repos.txt | grep -v "#" | awk -F'\n' '{print $1 "|ON"}')
+        addedrepositories=$(cat $dotfilesdir/repositories/linux/basic.txt | grep -v "#" | awk -F'\n' '{print $1 "|ON"}')
         if [[ $profile == "pentester" || $profile == "full" ]]; then
-            addedrepositories=$addedrepositories$'|'"$(cat $dotfilesdir/repositories/linux/repos_pentester.txt | grep -v "#" | awk -F'\n' '{print $1 "|ON"}')"
+            addedrepositories=$addedrepositories$'|'"$(cat $dotfilesdir/repositories/linux/pentester.txt | grep -v "#" | awk -F'\n' '{print $1 "|ON"}')"
         elif [[ $profile == "developer" || $profile == "full" ]]; then
-            addedrepositories=$addedrepositories$'|'"$(cat $dotfilesdir/repositories/linux/repos_developer.txt | grep -v "#" | awk -F'\n' '{print $1 "|ON"}')"
+            addedrepositories=$addedrepositories$'|'"$(cat $dotfilesdir/repositories/linux/developer.txt | grep -v "#" | awk -F'\n' '{print $1 "|ON"}')"
         elif [[ $profile == "server" || $profile == "full" ]]; then
-            addedrepositories=$addedrepositories$'|'"$(cat $dotfilesdir/repositories/linux/repos_server.txt | grep -v "#" | awk -F'\n' '{print $1 "|ON"}')"
+            addedrepositories=$addedrepositories$'|'"$(cat $dotfilesdir/repositories/linux/server.txt | grep -v "#" | awk -F'\n' '{print $1 "|ON"}')"
         fi
 
         IFS=$'|'
@@ -248,16 +248,16 @@ elif [[ $system_type == "Linux" ]]; then
             fi
         fi
     else
-        addedrepositories=$(cat $dotfilesdir/repositories/linux/repos.txt | grep -v "#" | awk -F'\n' '{print $1}')
+        addedrepositories=$(cat $dotfilesdir/repositories/linux/basic.txt | grep -v "#" | awk -F'\n' '{print $1}')
         if [[ $profile == "pentester" || $profile == "full" ]]; then
             addedrepositories=$addedrepositories$'|'"$(cat
-            $dotfilesdir/repositories/linux/repos_pentester.txt | grep -v "#" | awk -F'\n' '{print $1}')"
+            $dotfilesdir/repositories/linux/pentester.txt | grep -v "#" | awk -F'\n' '{print $1}')"
         elif [[ $profile == "developer" || $profile == "full" ]]; then
             addedrepositories=$addedrepositories$'|'"$(cat
-            $dotfilesdir/repositories/linux/repos_developer.txt | grep -v "#" | awk -F'\n' '{print $1}')"
+            $dotfilesdir/repositories/linux/developer.txt | grep -v "#" | awk -F'\n' '{print $1}')"
         elif [[ $profile == "server" || $profile == "full" ]]; then
             addedrepositories=$addedrepositories$'|'"$(cat
-            $dotfilesdir/repositories/linux/repos_server.txt | grep -v "#" | awk -F'\n' '{print $1}')"
+            $dotfilesdir/repositories/linux/server.txt | grep -v "#" | awk -F'\n' '{print $1}')"
         fi
         IFS=$'|'
         selectedrepositories=($addedrepositories)
@@ -297,13 +297,13 @@ elif [[ $system_type == "Linux" ]]; then
 
     if [ "$interactive" = "1" ]; then
 
-        installpackages=$(cat $dotfilesdir/packages/linux/pkglist.txt | grep -v "#" | awk '{print $1 " ON"}')
+        installpackages=$(cat $dotfilesdir/packages/linux/basic.txt | grep -v "#" | awk '{print $1 " ON"}')
         if [[ $profile == "pentester" || $profile == "full" ]]; then
-            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/linux/pkglist_pentester.txt | grep -v "#" | awk '{print $1 " ON"}')"
+            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/linux/pentester.txt | grep -v "#" | awk '{print $1 " ON"}')"
         elif [[ $profile == "developer" || $profile == "full" ]]; then
-            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/linux/pkglist_developer.txt | grep -v "#" | awk '{print $1 " ON"}')"
+            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/linux/developer.txt | grep -v "#" | awk '{print $1 " ON"}')"
         elif [[ $profile == "server" || $profile == "full" ]]; then
-            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/linux/pkglist_server.txt | grep -v "#" | awk '{print $1 " ON"}')"
+            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/linux/server.txt | grep -v "#" | awk '{print $1 " ON"}')"
         fi
 
         installpackagesarray=($installpackages)
@@ -319,13 +319,13 @@ elif [[ $system_type == "Linux" ]]; then
             fi
         fi
     else
-        installpackages=$(cat $dotfilesdir/packages/linux/pkglist.txt | grep -v "#" | awk '{print $1}')
+        installpackages=$(cat $dotfilesdir/packages/linux/basic.txt | grep -v "#" | awk '{print $1}')
         if [[ $profile == "pentester" || $profile == "full" ]]; then
-            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/linux/pkglist_pentester.txt | grep -v "#" | awk '{print $1}')"
+            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/linux/pentester.txt | grep -v "#" | awk '{print $1}')"
         elif [[ $profile == "developer" || $profile == "full" ]]; then
-            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/linux/pkglist_developer.txt | grep -v "#" | awk '{print $1}')"
+            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/linux/developer.txt | grep -v "#" | awk '{print $1}')"
         elif [[ $profile == "server" || $profile == "full" ]]; then
-            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/linux/pkglist_server.txt | grep -v "#" | awk '{print $1}')"
+            installpackages=$installpackages$'\n'"$(cat $dotfilesdir/packages/linux/server.txt | grep -v "#" | awk '{print $1}')"
         fi
 
         selectedpackages=$installpackages
@@ -511,4 +511,37 @@ elif [[ $system_type == "Linux" ]]; then
 else
     echo "This dotfiles just support Linux and MacOS distributions. Unrecognized $system_type distribution."
     exit 1
+
+### Install Go tools ###
+echo "Installing Go packages"
+
+gopackages=$(cat $dotfilesdir/packages/go/basic.txt | grep -v "#")
+if [[ $profile == "pentester" || $profile == "full" ]]; then
+    gopackages=$gopackages$'\n'"$(cat $dotfilesdir/packages/go/pentester.txt | grep -v "#")"
+elif [[ $profile == "developer" || $profile == "full" ]]; then
+    gopackages=$gopackages$'\n'"$(cat $dotfilesdir/packages/go/developer.txt | grep -v "#")"
+elif [[ $profile == "server" || $profile == "full" ]]; then
+    gopackages=$gopackages$'\n'"$(cat $dotfilesdir/packages/go/server.txt | grep -v "#")"
+fi
+
+for g in $gopackages; do
+    go install $g
+done
+
+### Install Pip tools ###
+echo "Installing Pip packages"
+
+pypackages=$(cat $dotfilesdir/packages/pip/basic.txt | grep -v "#")
+if [[ $profile == "pentester" || $profile == "full" ]]; then
+    pypackages=$pypackages$'\n'"$(cat $dotfilesdir/packages/pip/pentester.txt | grep -v "#")"
+elif [[ $profile == "developer" || $profile == "full" ]]; then
+    pypackages=$pypackages$'\n'"$(cat $dotfilesdir/packages/pip/developer.txt | grep -v "#")"
+elif [[ $profile == "server" || $profile == "full" ]]; then
+    pypackages=$pypackages$'\n'"$(cat $dotfilesdir/packages/pip/server.txt | grep -v "#")"
+fi
+
+for p in $pypackages; do
+    pip install $p
+done
+
 fi
