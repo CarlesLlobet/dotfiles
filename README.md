@@ -90,8 +90,7 @@ Basic packages needed in any environment.
 
 ###### Scripted installation software
 
-* [Docker](https://www.docker.com/) - Application virtualization software
-* [VirtualBox GuestAdditions](https://docs.oracle.com/cd/E36500_01/E36502/html/qs-guest-additions.html) - Device Drivers and System applications to improve interaction between Host-VM
+* ~~[VirtualBox GuestAdditions](https://docs.oracle.com/cd/E36500_01/E36502/html/qs-guest-additions.html) - Device Drivers and System applications to improve interaction between Host-VM~~
 
 ###### Pip packages
 
@@ -159,7 +158,7 @@ Specific packages for servers.
 
 ###### Scripted installation software
 
-* N/A
+* [Docker](https://www.docker.com/) - Application virtualization software
 
 ###### Pip packages
 
