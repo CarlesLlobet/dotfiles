@@ -36,6 +36,10 @@ if [ -d "/Applications/checkra1n.app" ]; then
     PATH="/Applications/checkra1n.app/Contents/MacOS:$PATH"
 fi
 
+# Export Go Paths
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+
 # Set Language locales
 # export LC_CTYPE=es_ES.UTF-8
 # export LC_ALL=es_ES.UTF-8

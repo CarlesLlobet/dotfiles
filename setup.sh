@@ -177,10 +177,11 @@ if [[ $system_type == "Darwin" ]]; then
         ln -s $dotfilesdir/configfiles/spacemacs/docker/src/.org-capture-templates.el ~/.org-capture-templates.el
     fi
 
-    # Load BashRC
+    # Load BashRC and profile
     echo "Sourcing bashrc"
     if [ -h ~/.bashrc ]; then
         source ~/.bashrc
+        source ~/.profile
     fi
 
     # Ranger
