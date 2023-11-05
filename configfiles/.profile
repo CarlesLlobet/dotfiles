@@ -37,8 +37,8 @@ if [ -d "/Applications/checkra1n.app" ]; then
 fi
 
 # Set Language locales
-export LC_CTYPE=es_ES.UTF-8
-export LC_ALL=es_ES.UTF-8
+# export LC_CTYPE=es_ES.UTF-8
+# export LC_ALL=es_ES.UTF-8
 
 setxkbmap es
 xmodmap -e 'keycode 94=masculine ordfeminine backslash brokenbar backslash brokenbar' -e 'keycode 49=less greater'
