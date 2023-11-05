@@ -380,9 +380,25 @@ elif [[ $system_type == "Linux" ]]; then
             source "$dotfilesdir/installscripts/$script"
         fi
     done
-    
-    # BurpSuite TODO: Install from own version
 
+    ### Install Snap tools ###
+    echo "Installing Snap packages"
+
+    snappackages=$(cat $dotfilesdir/packages/snap/basic.txt | grep -v "#")
+    if [[ $profile == "pentester" || $profile == "full" ]]; then
+        snappackages=$snappackages$'\n'"$(cat $dotfilesdir/packages/snap/pentester.txt | grep -v "#")"
+    elif [[ $profile == "developer" || $profile == "full" ]]; then
+        snappackages=$snappackages$'\n'"$(cat $dotfilesdir/packages/snap/developer.txt | grep -v "#")"
+    elif [[ $profile == "server" || $profile == "full" ]]; then
+        snappackages=$snappackages$'\n'"$(cat $dotfilesdir/packages/snap/server.txt | grep -v "#")"
+    fi
+
+    for s in $snappackages; do
+        sudo snap install $s
+    done
+    
+    # TODO:
+    # BurpSuite
     # synthesis
     # john the ripper
     # sage
