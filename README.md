@@ -167,7 +167,11 @@ Specific packages for developers.
 * [guake](http://guake-project.org/) (APT) - Top-down terminal for Gnome
 * [libc6-dev](https://packages.debian.org/jessie/libc6-dev) (APT) - GNU C development library
 * [libpoppler-glib-dev](https://packages.debian.org/jessie/libpoppler-glib-dev) (APT) - To render PDF from console
+* [qemu-kvm](https://www.qemu.org/) (APT)- To use CPU extensions (HVM) instead of native Qemu using emulation
+* [qemu](https://www.qemu.org/) (APT) - Virtual Machine Manager
 * [scrot](https://packages.debian.org/jessie/scrot) (APT) - SCReen shOT utility from command line
+* [virt-manager](https://virt-manager.org/) (APT) - Desktop GUI to manage VMs
+* [virt-viewer](https://pagure.io/virt-viewer) (APT) - Desktop GUI to view VM guests
  
 #### Pentester
 Specific packages for cybersecurity engineers.
@@ -193,8 +197,6 @@ Specific packages for cybersecurity engineers.
 * [masscan](https://github.com/robertdavidgraham/masscan) (APT) - Internet-scale port scanner
 * [nmap](https://nmap.org/) (APT) - Network Discovery Scanner
 * [nuclei](https://github.com/projectdiscovery/nuclei) (Go) - Fast and customizable vulnerability scanner based on YAML templates
-* [qemu-kvm](https://www.qemu.org/) (APT)- To use CPU extensions (HVM) instead of native Qemu using emulation
-* [qemu](https://www.qemu.org/) (APT) - Virtual Machine Manager
 * [radamsa](https://github.com/aoh/radamsa) (Script) - General purpose Fuzzer
 * [radare2](https://rada.re/n/) (Script) - RE suite (Disassembler, Decompiler, Debugger, ...)
 * [ropper](https://github.com/sashs/Ropper) (Pip) - Display useful info to find ROP chains 
@@ -203,8 +205,6 @@ Specific packages for cybersecurity engineers.
 * [sqlmap](http://sqlmap.org/) (Script) - Database Pentest tool
 * [subjack](https://github.com/haccer/subjack) (Go) - Subdomain Takeover tool
 * [SynackAPI](https://github.com/bamhm182/SynackAPI) (Pip) - A Python Library designed to facilitate interaction with Synack's undocumented API endpoints
-* [virt-manager](https://virt-manager.org/) (APT) - Desktop GUI to manage VMs
-* [virt-viewer](https://pagure.io/virt-viewer) (APT) - Desktop GUI to view VM guests
 * [waybackurls](https://github.com/tomnomnom/waybackurls) (Go) - Fetch all the URLs that the Wayback Machine knows about for a domain
 * [whireshark](https://www.wireshark.org/) (APT) - Network protocol analyzer
 * [z3](https://github.com/Z3Prover/z3) (Script) - Solver for Symbolic Execution
