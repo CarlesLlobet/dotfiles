@@ -88,20 +88,28 @@ Specific packages for developers.
 #### Pentester
 Specific packages for cybersecurity engineers.
 
+* [assetfinder](https://github.com/tomnomnom/assetfinder) (Go) - Find domains and subdomains potentially related to a given domain
 * [binwalk](https://github.com/ReFirmLabs/binwalk) (Brew) - RE tool to analyze and extract firmware images
-* [cherrytree](https://www.giuspen.net/cherrytree/) (Brew) - 
-A hierarchical note taking application
+* [cherrytree](https://www.giuspen.net/cherrytree/) (Brew) - A hierarchical note taking application
 * [cscope](http://cscope.sourceforge.net/) (APT) - Browse C Source Code (even C++ and Java)
 * [dalfox](https://github.com/hahwul/dalfox) (Go) - A powerful open-source XSS scanner
 * [dnsx](https://github.com/projectdiscovery/dnsx) (Go) - A fast and multi-purpose DNS toolkit designed for running DNS queries
 * [feroxbuster](https://github.com/epi052/feroxbuster) (Brew) - A simple, fast, recursive content discovery tool written in Rust
 * [ffuf](https://github.com/ffuf/ffuf) (Go) - A fast web fuzzer written in Go
+* [getallurls](https://github.com/lc/gau) (Go) -  fetches known URLs from AlienVault's Open Threat Exchange, the Wayback Machine, Common Crawl, and URLScan for any given domain
+* [gobuster](https://github.com/OJ/gobuster) (Go) - Gobuster is a tool used to brute-force URIs, DNS subdomains, Virtual Host names, S3 buckets, and many more
+* [hakrawler](https://github.com/hakluke/hakrawler) (Go) - Fast golang web crawler for gathering URLs and JavaScript file locations
+* [kxss](github.com/Emoe/kxss) (Go) - Checks URL params for returned data to look for XSS
 * [nmap](https://nmap.org/) (Brew) - Network Discovery Scanner
+* [nuclei](https://github.com/projectdiscovery/nuclei) (Go) - Fast and customizable vulnerability scanner based on YAML templates
+* [shuffledns](https://github.com/projectdiscovery/shuffledns) (Go) - wrapper around massdns to enumerate valid subdomains using active bruteforce
+* [subjack](https://github.com/haccer/subjack) (Go) - Subdomain Takeover tool
+* [SynackAPI](https://github.com/bamhm182/SynackAPI) (Pip) - A Python Library designed to facilitate interaction with Synack's undocumented API endpoints
 * [qemu](https://www.qemu.org/) (Brew) - Virtual Machine Manager
 * [virt-manager](https://virt-manager.org/) (Brew) - Desktop GUI to manage VMs
 * [virt-viewer](https://pagure.io/virt-viewer) (Brew) - Desktop GUI to view VM guests
+* [waybackurls](https://github.com/tomnomnom/waybackurls) (Go) - Fetch all the URLs that the Wayback Machine knows about for a domain
 * [whireshark](https://www.wireshark.org/) (Brew) - Network protocol analyzer
-
 
 #### Server
 Specific packages for servers.
@@ -175,19 +183,29 @@ Specific packages for cybersecurity engineers.
 * [feroxbuster](https://github.com/epi052/feroxbuster) (Script) - A simple, fast, recursive content discovery tool written in Rust
 * [ffuf](https://github.com/ffuf/ffuf) (Go) - A fast web fuzzer written in Go
 * [flawfinder](https://dwheeler.com/flawfinder/) (Pip) - C/C++ source code analyzer
+* [getallurls](https://github.com/lc/gau) (Go) -  fetches known URLs from AlienVault's Open Threat Exchange, the Wayback Machine, Common Crawl, and URLScan for any given domain
 * [gef](https://gef.readthedocs.io/en/master/) (Script) - GDB Plugin with extended features
 * [ghidra](https://ghidra-sre.org/) (Script) - RE suite (Disassembler, Decompiler, ...)
+* [gobuster](https://github.com/OJ/gobuster) (Go) - Gobuster is a tool used to brute-force URIs, DNS subdomains, Virtual Host names, S3 buckets, and many more
+* [hakrawler](https://github.com/hakluke/hakrawler) (Go) - Fast golang web crawler for gathering URLs and JavaScript file locations
 * [katoolin](https://github.com/LionSec/katoolin) (Script) - To install automatically Kali Linux Tools
+* [kxss](github.com/Emoe/kxss) (Go) - Checks URL params for returned data to look for XSS
+* [masscan](https://github.com/robertdavidgraham/masscan) (APT) - Internet-scale port scanner
 * [nmap](https://nmap.org/) (APT) - Network Discovery Scanner
-* [qemu-kvm]() - To use CPU extensions (HVM) instead of native Qemu using emulation
+* [nuclei](https://github.com/projectdiscovery/nuclei) (Go) - Fast and customizable vulnerability scanner based on YAML templates
+* [qemu-kvm](https://www.qemu.org/) (APT)- To use CPU extensions (HVM) instead of native Qemu using emulation
 * [qemu](https://www.qemu.org/) (APT) - Virtual Machine Manager
 * [radamsa](https://github.com/aoh/radamsa) (Script) - General purpose Fuzzer
-* [radare2](https://rada.re/n/) (Script) - 
+* [radare2](https://rada.re/n/) (Script) - RE suite (Disassembler, Decompiler, Debugger, ...)
 * [ropper](https://github.com/sashs/Ropper) (Pip) - Display useful info to find ROP chains 
-* [sandmap]() - RE suite (Disassembler, Decompiler, Debugger, ...)
+* [sandmap](https://github.com/trimstray/sandmap) (Script) - tool supporting network and system reconnaissance using the massive Nmap engine
+* [shuffledns](https://github.com/projectdiscovery/shuffledns) (Go) - wrapper around massdns to enumerate valid subdomains using active bruteforce
 * [sqlmap](http://sqlmap.org/) (Script) - Database Pentest tool
+* [subjack](https://github.com/haccer/subjack) (Go) - Subdomain Takeover tool
+* [SynackAPI](https://github.com/bamhm182/SynackAPI) (Pip) - A Python Library designed to facilitate interaction with Synack's undocumented API endpoints
 * [virt-manager](https://virt-manager.org/) (APT) - Desktop GUI to manage VMs
 * [virt-viewer](https://pagure.io/virt-viewer) (APT) - Desktop GUI to view VM guests
+* [waybackurls](https://github.com/tomnomnom/waybackurls) (Go) - Fetch all the URLs that the Wayback Machine knows about for a domain
 * [whireshark](https://www.wireshark.org/) (APT) - Network protocol analyzer
 * [z3](https://github.com/Z3Prover/z3) (Script) - Solver for Symbolic Execution
 

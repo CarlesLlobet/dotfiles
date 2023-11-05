@@ -396,17 +396,6 @@ elif [[ $system_type == "Linux" ]]; then
     for s in $snappackages; do
         sudo snap install $s
     done
-    
-    # TODO:
-    # BurpSuite
-    # synthesis
-    # john the ripper
-    # sage
-    # hashcat
-    # dotNetInspector
-    # dotpeek <- only works on windows
-    # dex2jar
-    # kali
 
     ### Configfiles Symlinks ###
     echo "### Configurating environment with configfiles ###"
@@ -557,7 +546,7 @@ elif [[ $profile == "server" || $profile == "full" ]]; then
 fi
 
 for p in $pypackages; do
-    pip install $p
+    pip3 install --upgrade $p
 done
 
 fi
