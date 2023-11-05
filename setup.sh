@@ -516,7 +516,7 @@ elif [[ $system_type == "Linux" ]]; then
 else
     echo "This dotfiles just support Linux and MacOS distributions. Unrecognized $system_type distribution."
     exit 1
-
+fi
 ### Install Go tools ###
 echo "Installing Go packages"
 
@@ -548,5 +548,3 @@ fi
 for p in $pypackages; do
     pip3 install --upgrade $p
 done
-
-fi
