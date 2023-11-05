@@ -4,6 +4,7 @@ curl
 dos2unix
 emacs
 git
+go
 gnupg2
 htop
 inetutils

@@ -8,6 +8,7 @@ curl
 #direnv
 dos2unix
 git
+golang-go
 gnupg2
 gnutls-bin
 htop
