@@ -378,6 +378,7 @@ elif [[ $system_type == "Linux" ]]; then
         if [[ "$(echo $script | awk -F/ '{print $NF}')" == "requirements.txt" ]]; then
             pip install -r "$dotfilesdir/scripts/$script"
         else
+            chmod +x "$dotfilesdir/scripts/$script"
             source "$dotfilesdir/scripts/$script"
         fi
     done
