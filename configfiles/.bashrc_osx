@@ -4,6 +4,7 @@
 alias cpu="ps -A -o %cpu | awk '{s+=\$1}END{print s\"%\"}'"
 alias procnum="ps -A | wc -l | sed 's/^ *//'"
 
+if [[ $TERM_PROGRAM != "WarpTerminal" ]]; then
 function __setprompt
 {
     local LAST_COMMAND=$? # Must come first!
@@ -117,8 +118,9 @@ function __setprompt
     # PS4 is used for tracing a script in debug mode
     PS4='\[${DARKGRAY}\]+\[${NOCOLOR}\] '
 }
-PROMPT_COMMAND='__setprompt'
 
+PROMPT_COMMAND="__setprompt"
+fi
 # History control
 # don't put duplicate lines in the history. See bash(1) for more options
 # don't overwrite GNU Midnight Commander's setting of `ignorespace'.
@@ -140,15 +142,15 @@ unset color_prompt force_color_prompt
 
 # Colors aliases
 # enable color support of ls and also add handy color aliases
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+#if [ -x /usr/bin/dircolors ]; then
+#    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias ls='ls --color=auto'
     alias dir='dir --color=auto'
     alias vdir='vdir --color=auto'
     alias grep='grep --color=auto'
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
-fi
+#fi
 
 # some more ls aliases
 
