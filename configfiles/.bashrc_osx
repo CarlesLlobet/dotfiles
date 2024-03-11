@@ -187,3 +187,6 @@ eval "$(/opt/homebrew/bin/thefuck --alias)"
 export AWS_VAULT_KEYCHAIN_NAME="login"
 # Use long living sessions in aws-vault
 export AWS_SESSION_TTL="12h"
+
+# Created by `pipx` on 2024-01-30 21:52:42
+export PATH="$PATH:/Users/carles.llobet/.local/bin"
