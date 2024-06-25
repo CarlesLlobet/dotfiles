@@ -103,10 +103,10 @@ if [[ $system_type == "Darwin" ]]; then
     fi
 
     architecture=$(uname -m)
-    if [[ $architecture == "arm64" ]]; then
-        echo "Installing Rosetta"
-        softwareupdate --install-rosetta
-    fi
+    #if [[ $architecture == "arm64" ]]; then
+        #echo "Installing Rosetta"
+        #softwareupdate --install-rosetta
+    #fi
     echo "Installing Homebrew..."
     # install homebrew
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
@@ -533,20 +533,4 @@ fi
 
 for g in $gopackages; do
     go install $g
-done
-
-### Install Pip tools ###
-echo "Installing Pip packages"
-
-pypackages=$(cat $dotfilesdir/packages/pip/basic.txt | grep -v "#")
-if [[ $profile == "pentester" || $profile == "full" ]]; then
-    pypackages=$pypackages$'\n'"$(cat $dotfilesdir/packages/pip/pentester.txt | grep -v "#")"
-elif [[ $profile == "developer" || $profile == "full" ]]; then
-    pypackages=$pypackages$'\n'"$(cat $dotfilesdir/packages/pip/developer.txt | grep -v "#")"
-elif [[ $profile == "server" || $profile == "full" ]]; then
-    pypackages=$pypackages$'\n'"$(cat $dotfilesdir/packages/pip/server.txt | grep -v "#")"
-fi
-
-for p in $pypackages; do
-    pip3 install --upgrade $p
 done

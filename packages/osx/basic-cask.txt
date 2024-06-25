@@ -2,5 +2,5 @@ android-platform-tools
 docker
 flameshot
 #iterm2
+rectangle
 warp
-tiles
