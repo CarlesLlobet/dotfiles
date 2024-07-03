@@ -9,6 +9,7 @@ gnupg2
 htop
 inetutils
 pandoc
+python3
 ranger
 thefuck
 tmux

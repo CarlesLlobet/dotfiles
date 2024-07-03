@@ -117,10 +117,7 @@ if [[ $system_type == "Darwin" ]]; then
     for file in $caskpackages; do
         brew install --cask $file
     done
-    # Installing pip
-    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-    python3 get-pip.py
-  
+    
     #Configuring some Apple basics
     defaults write com.apple.dock workspaces-auto-swoosh -bool NO
     defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
@@ -141,8 +138,8 @@ if [[ $system_type == "Darwin" ]]; then
         echo "Creating symlink to $file in ~"
         if [[ $file == ".bashrc" ]]; then
             ln -s $dotfilesdir/configfiles/.bashrc_osx ~/$file
-        elif [[ $file == ".profile" ]]; then
-            ln -s $dotfilesdir/configfiles/.profile_osx ~/$file
+        elif [[ $file == ".bash_profile" ]]; then
+            ln -s $dotfilesdir/configfiles/.bash_profile_osx ~/$file
         else
             ln -s $dotfilesdir/configfiles/$file ~/$file
         fi
@@ -181,7 +178,7 @@ if [[ $system_type == "Darwin" ]]; then
     echo "Sourcing bashrc"
     if [ -h ~/.bashrc ]; then
         source ~/.bashrc
-        source ~/.profile
+        source ~/.bash_profile
     fi
 
     # Ranger

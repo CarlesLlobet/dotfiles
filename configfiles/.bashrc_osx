@@ -190,3 +190,6 @@ export AWS_SESSION_TTL="12h"
 
 # Created by `pipx` on 2024-01-30 21:52:42
 export PATH="$PATH:/Users/carles.llobet/.local/bin"
+
+# Created by `pipx` on 2024-07-03 20:28:57
+export PATH="$PATH:/Users/carles/.local/bin"
