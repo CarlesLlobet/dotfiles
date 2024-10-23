@@ -178,4 +178,4 @@ if grep -qE "(?!WSL2)(Microsoft|WSL)" /proc/version &> /dev/null ; then
 fi
 
 # Configure fuck
-eval $(thefuck --alias)
+# eval $(thefuck --alias)
