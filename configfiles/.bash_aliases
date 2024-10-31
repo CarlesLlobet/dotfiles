@@ -29,7 +29,8 @@ alias speedtest="curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/m
 #alias tmux="tmux -2 attach"
 
 ## Proxmox
-alias gpuenable="sed -i 's/^/#/g' /etc/modprobe.d/vfio.conf && pct mount 107 && sed -i 's/#hwaccel/hwaccel/g' /var/lib/lxc/107/rootfs/root/config/config.yaml && pct unmount 107 && pct set 107 --dev1 path=/dev/dri/renderD128,mode=0666 && shutdown -r now"
+alias gpuenable="sed -i 's/^/#/g' /etc/modprobe.d/vfio.conf && pct mount 107 && sed -i 's/#hwaccel/hwaccel/g' /var/lib/lxc/107/rootfs/root/config/config.yaml && pct unmount 107 && shutdown -r now"
+alias gpuinit="modprobe amdgpu && pct set 107 --dev1 path=/dev/dri/renderD128,mode=0666"
 alias gpudisable="sed -i 's/^.//g' /etc/modprobe.d/vfio.conf && pct mount 107 && sed -i 's/hwaccel/#hwaccel/g' /var/lib/lxc/107/rootfs/root/config/config.yaml && pct unmount 107 && pct set 107 --delete dev1 && shutdown -r now"
 
 ## Personio dev
