@@ -29,15 +29,7 @@ alias speedtest="curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/m
 #alias tmux="tmux -2 attach"
 
 ## Proxmox
-alias gpuenable="vzdump 100 --mode snapshot --compress zstd --storage PBS && sed -i 's/^/#/g' /etc/modprobe.d/vfio.conf && pct mount 107 && sed -i 's/#hwaccel/hwaccel/g' /var/lib/lxc/107/rootfs/root/config/config.yaml && pct unmount 107 && shutdown -r now"
-alias gpuinit="modprobe amdgpu && pct set 107 --dev1 path=/dev/dri/renderD128,mode=0666 && pct set 119 --dev0 path=/dev/dri/renderD128,mode=0666 && pct reboot 107 && pct reboot 119"
-alias gpudisable="sed -i 's/^.//g' /etc/modprobe.d/vfio.conf && pct mount 107 && sed -i 's/hwaccel/#hwaccel/g' /var/lib/lxc/107/rootfs/root/config/config.yaml && pct unmount 107 && pct set 107 -del dev1 && pct set 119 -del dev0 && shutdown -r now"
-
-## Personio dev
-alias pc="/opt/homebrew/bin/perctl"
-alias mc="~/dev/personio/monolith-cli"
-alias per="cd ~/dev/personio"
-alias reload="pc refresh && pc artisan personio:i18n-json && per && rm -rf node_modules && yarn install --pure-lockfile && yarn run start"
-alias reload-mysql="pc build dev && pc recreate mysql && pc recreate web"
-alias laravel-log="tail -20f app/storage-local/logs/laravel.log"
-alias storage-777="sudo chmod -R 777 app/storage-local/ && sudo chmod -R 777 app/storage"
+alias gpuenable="sed -i 's/^softdep/#softdep/g' /etc/modprobe.d/vfio.conf && sed -i 's/a804,1002/a804 #,1002/g' /etc/modprobe.d/vfio.conf && pct mount 107 && sed -i 's/#hwaccel/hwaccel/g' /var/lib/lxc/107/rootfs/root/config/config.yaml && pct unmount 107 && shutdown -r now"
+alias gpuinit="sed -i 's/hostpci0/#hostpci0/g' /etc/pve/qemu-server/100.conf && sed -i 's/hostpci1/#hostpci1/g' /etc/pve/qemu-server/100.conf && sed -i 's/vga/#vga/g' /etc/pve/qemu-server/100.conf && modprobe amdgpu && pct set 107 --dev1 path=/dev/dri/renderD128,mode=0666 && pct set 119 --dev0 path=/dev/dri/renderD128,mode=0666 && pct start 107 && pct start 119"
+# TODO: Add this to gpuinit: pct set 107 --dev0 path=/dev/bus/usb/$(lsusb | grep Google | cut -d" " -f2,4 | cut -d":" -f1 | sed 's/ /\//g'),mode=0666
+alias gpudisable="sed -i 's/#hostpci0/hostpci0/g' /etc/pve/qemu-server/100.conf && sed -i 's/#hostpci1/hostpci1/g' /etc/pve/qemu-server/100.conf && sed -i 's/#vga/vga/g' /etc/pve/qemu-server/100.conf && sed -i 's/ #//g' /etc/modprobe.d/vfio.conf && sed -i 's/^#//g' /etc/modprobe.d/vfio.conf && pct mount 107 && sed -i 's/hwaccel/#hwaccel/g' /var/lib/lxc/107/rootfs/root/config/config.yaml && pct unmount 107 && pct set 107 -del dev1 && pct set 119 -del dev0 && shutdown -r now"
